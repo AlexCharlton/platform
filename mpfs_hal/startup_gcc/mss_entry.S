@@ -519,7 +519,7 @@ trap_vector:
     # At this point (2019), both are supported in latest compiler
     # older compiler versions only support mbadaddr, so going with this.
     # See: https://github.com/riscv/riscv-gcc/issues/133
-    csrr a1, mbadaddr                 # useful for anaysis when things go wrong
+    csrr a1, mtval                 # useful for anaysis when things go wrong
     csrr a2, mepc
     jal trap_from_machine_mode
 

@@ -15,6 +15,9 @@
 #include "hal/hal.h"
 #include "hal/hal_assert.h"
 
+// Define from mss_util.h
+void sleep_ms(uint64_t msecs);
+
 #define NULL_QSPI_INSTANCE ((qspi_instance_t *)0)
 #define NULL_BUFFER ((uint8_t*)0)
 
