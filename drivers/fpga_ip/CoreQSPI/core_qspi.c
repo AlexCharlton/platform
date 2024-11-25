@@ -19,23 +19,20 @@
 void sleep_ms(uint64_t msecs);
 
 #define NULL_QSPI_INSTANCE ((qspi_instance_t *)0)
-#define NULL_BUFFER ((uint8_t*)0)
+#define NULL_BUFFER ((uint8_t *)0)
 
 static void default_status_hanlder(uint32_t value);
 static volatile uint32_t g_irq_rd_byte_size = 0u;
-static void * g_rd_buffer;
+static void *g_rd_buffer;
 static volatile qspi_status_handler_t g_handler;
 
-/***************************************************************************//**
+/**
  * QSPI_init()
  * See "core_qspi.h" for details of how to use this function.
  */
-void
-QSPI_init
-(
+void QSPI_init(
     qspi_instance_t *this_qspi,
-    addr_t addr
-)
+    addr_t addr)
 {
     uint32_t reg_read = 0u;
     g_handler = default_status_hanlder;
@@ -46,7 +43,7 @@ QSPI_init
 
     reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-                                            ((reg_read) | CTRL_ENABLE_MASK));
+                      ((reg_read) | CTRL_ENABLE_MASK));
 
     /* Enable the core, core samples SDI in master mode, sets SPI clock rate,
      * allows spi memory operations in mode 0 or mode 3.
@@ -61,24 +58,22 @@ QSPI_init
     HAL_set_32bit_reg(addr, INT_ENABLE, 0u);
 }
 
-/***************************************************************************//**
+/***************************************************************************/
+/**
  * QSPI_configure()
  * See core_qspi.h for details of how to use this function.
  */
-void
-QSPI_configure
-(
+void QSPI_configure(
     qspi_instance_t *this_qspi,
-    const qspi_config_t* config
-)
+    const qspi_config_t *config)
 {
     /* Configure QSPI. Called from micron_mt25q.c flash_init() */
     uint32_t temp_reg_read = 0u;
 
-    temp_reg_read = (uint32_t)((config->sample) << CTRL_SAMPLE_SHIFT)    |
+    temp_reg_read = (uint32_t)((config->sample) << CTRL_SAMPLE_SHIFT) |
                     (uint32_t)((config->io_format) << CTRL_QMODE0_SHIFT) |
-                    (uint32_t)((config->clk_div) << CTRL_CLKRATE_SHIFT)  |
-                    (uint32_t)((config->xip) << CTRL_XIP_SHIFT)          |
+                    (uint32_t)((config->clk_div) << CTRL_CLKRATE_SHIFT) |
+                    (uint32_t)((config->xip) << CTRL_XIP_SHIFT) |
                     (uint32_t)((config->xip_addr) << CTRL_XIPADDR_SHIFT) |
                     (uint32_t)((config->spi_mode) << CTRL_CLKIDLE_SHIFT) |
                     CTRL_ENABLE_MASK;
@@ -86,56 +81,51 @@ QSPI_configure
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL, temp_reg_read);
 }
 
-/***************************************************************************//**
+/***************************************************************************/
+/**
  * QSPI_get_config()
  * See core_qspi.h for details of how to use this function.
  */
-void QSPI_get_config
-(
+void QSPI_get_config(
     qspi_instance_t *this_qspi,
-    qspi_config_t* config
-)
+    qspi_config_t *config)
 {
-    volatile uint32_t reg =0;
+    volatile uint32_t reg = 0;
 
     reg = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
 
     config->spi_mode = ((reg & CTRL_CLKIDLE_MASK) >> CTRL_CLKIDLE_SHIFT);
 
-    reg = reg & (uint32_t )((uint32_t )CTRL_QMODE12_MASK
-                          | (uint32_t )CTRL_QMODE0_MASK);
+    reg = reg & (uint32_t)((uint32_t)CTRL_QMODE12_MASK | (uint32_t)CTRL_QMODE0_MASK);
 
     reg = reg >> CTRL_QMODE0_SHIFT;
 
     config->io_format = (qspi_io_format)reg;
-    config->clk_div = (qspi_clk_div)((reg & CTRL_CLKRATE_MASK)
-            >> CTRL_CLKRATE_SHIFT);
+    config->clk_div = (qspi_clk_div)((reg & CTRL_CLKRATE_MASK) >> CTRL_CLKRATE_SHIFT);
 
     config->xip = (uint8_t)((reg & CTRL_XIP_MASK) >> CTRL_XIP_SHIFT);
     config->xip_addr = (uint8_t)((reg & CTRL_XIPADDR_MASK) >> CTRL_XIPADDR_SHIFT);
     config->sample = (uint8_t)((reg & CTRL_SAMPLE_MASK) >> CTRL_SAMPLE_SHIFT);
 }
 
-/***************************************************************************//**
+/***************************************************************************/
+/**
  * QSPI_polled_transfer_block()
  * See mss_qspi.h for details of how to use this function.
  */
-void
-QSPI_polled_transfer_block
-(
+void QSPI_polled_transfer_block(
     qspi_instance_t *this_qspi,
     uint8_t num_addr_bytes,
-    const void * const tx_buffer,
+    const void *const tx_buffer,
     uint32_t tx_byte_size,
-    const void * const rd_buffer,
+    const void *const rd_buffer,
     uint32_t rd_byte_size,
-    uint8_t num_idle_cycles
-)
+    uint8_t num_idle_cycles)
 {
     uint32_t idx;
     uint32_t reg_read = 0;
-    uint8_t* buf8 = (uint8_t*)tx_buffer;
-    uint32_t* buf32 = (uint32_t*)tx_buffer;
+    uint8_t *buf8 = (uint8_t *)tx_buffer;
+    uint32_t *buf32 = (uint32_t *)tx_buffer;
     volatile uint32_t skips;
     uint32_t cbytes;
     uint32_t total_byte_cnt;
@@ -152,21 +142,22 @@ QSPI_polled_transfer_block
 
     HAL_set_32bit_reg(this_qspi->base_address, INT_ENABLE, 0u);
 
-    do{
+    do
+    {
         reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-    } while(((reg_read) & STATUS_READY_MASK) == 0u);
+    } while (((reg_read)&STATUS_READY_MASK) == 0u);
 
     /* bit16 to 31 define the number of Upper bytes when count is >65535
            Write to lower 16 bit is ignored */
     HAL_set_32bit_reg(this_qspi->base_address, FRAMESUP,
-            total_byte_cnt & FRAMESUP_BYTESUPPER_MASK);
+                      total_byte_cnt & FRAMESUP_BYTESUPPER_MASK);
 
     if ((tx_byte_size <= 0xFFFFu) &&
-            (num_addr_bytes <= 4u) &&
-            (num_idle_cycles <= 15u))
+        (num_addr_bytes <= 4u) &&
+        (num_idle_cycles <= 15u))
     {
         /* Calculating skip bits */
-        skips  = (total_byte_cnt & FRAMES_TOTALBYTES_MASK);
+        skips = (total_byte_cnt & FRAMES_TOTALBYTES_MASK);
         skips |= (cbytes << FRAMES_COMMANDBYTES_SHIFT);
 
         reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
@@ -180,38 +171,40 @@ QSPI_polled_transfer_block
 
     reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-            ((reg_read) | CTRL_FLAGSX4_MASK));
+                      ((reg_read) | CTRL_FLAGSX4_MASK));
 
     words = total_bytes_tx / (uint32_t)4u;
 
     /* Load the transmit data into transmitdatax4 data register */
     for (idx = 0u; idx < words; ++idx)
     {
-        do{
+        do
+        {
             reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-        } while((reg_read) & STATUS_TXFIFOFULL_MASK);
+        } while ((reg_read)&STATUS_TXFIFOFULL_MASK);
 
         HAL_set_32bit_reg(this_qspi->base_address, X4TRANSMIT_DATA, (uint32_t)buf32[idx]);
     }
 
     reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-            ((reg_read) & ~(CTRL_FLAGSX4_MASK)));
+                      ((reg_read) & ~(CTRL_FLAGSX4_MASK)));
 
     uint32_t l_idx = (total_bytes_tx - (total_bytes_tx % 4u));
 
     /* Load the transmit data into transmit data register */
     for (idx = l_idx; idx < total_bytes_tx; ++idx)
     {
-        do{
+        do
+        {
             reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-        } while((reg_read) & STATUS_TXFIFOFULL_MASK);
+        } while ((reg_read)&STATUS_TXFIFOFULL_MASK);
 
         HAL_set_32bit_reg(this_qspi->base_address, TRANSMIT_DATA, (uint8_t)buf8[idx]);
     }
 
-    buf32 = (uint32_t*)rd_buffer;
-    buf8 = (uint8_t*)rd_buffer;
+    buf32 = (uint32_t *)rd_buffer;
+    buf8 = (uint8_t *)rd_buffer;
 
     /* Receive data */
     if (rd_byte_size)
@@ -220,67 +213,67 @@ QSPI_polled_transfer_block
 
         reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
         HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-                ((reg_read) | CTRL_FLAGSX4_MASK));
+                          ((reg_read) | CTRL_FLAGSX4_MASK));
 
         /* Load the TransmitX4 receive data into buf32 */
         for (idx = 0u; idx < words; ++idx)
         {
-            do{
+            do
+            {
                 reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-            } while((reg_read) & STATUS_RXFIFOEMPTY_MASK);
+            } while ((reg_read)&STATUS_RXFIFOEMPTY_MASK);
 
             buf32[idx] = HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA);
         }
 
         reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
         HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-                ((reg_read) & ~(CTRL_FLAGSX4_MASK)));
+                          ((reg_read) & ~(CTRL_FLAGSX4_MASK)));
 
         l_idx = (rd_byte_size - (rd_byte_size % 4u));
 
         /* Load the transmit data register contents into buf8 */
         for (idx = l_idx; idx < rd_byte_size; ++idx)
         {
-            do{
+            do
+            {
                 reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-            } while((reg_read) & STATUS_RXFIFOEMPTY_MASK);
+            } while ((reg_read)&STATUS_RXFIFOEMPTY_MASK);
 
             buf8[idx] = HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA);
         }
 
         /* Wait for RXDONE to complete and ignore the skip bits */
-        do{
-           skips = (uint64_t)(((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                    & (uint32_t)(STATUS_FLAGSX4_MASK))
-                    ? (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA))
-                    : (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA)));
-        } while (0u == (uint32_t)((HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                     & STATUS_RXDONE_MASK));
+        do
+        {
+            skips = (uint64_t)(((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & (uint32_t)(STATUS_FLAGSX4_MASK))
+                                   ? (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA))
+                                   : (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA)));
+        } while (0u == (uint32_t)((HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & STATUS_RXDONE_MASK));
     }
 }
 
-/***************************************************************************//**
+/***************************************************************************/
+/**
  * QSPI_irq_transfer_block()
  * See mss_qspi.h for details of how to use this function.
  */
 uint8_t
-QSPI_irq_transfer_block
-(
+QSPI_irq_transfer_block(
     qspi_instance_t *this_qspi,
     uint8_t num_addr_bytes,
-    const void * const tx_buffer,
+    const void *const tx_buffer,
     uint32_t tx_byte_size,
-    const void * const rd_buffer,
+    const void *const rd_buffer,
     uint32_t rd_byte_size,
-    uint8_t num_idle_cycles
-)
+    uint8_t num_idle_cycles)
 {
     uint32_t idx;
     uint32_t reg_read = 0u;
     uint32_t cbytes;
     uint32_t total_byte_cnt;
-    const uint8_t* buf8 = tx_buffer;
-    const uint32_t* buf32 = tx_buffer;
+    const uint8_t *buf8 = tx_buffer;
+    const uint32_t *buf32 = tx_buffer;
     volatile uint32_t skips = 0;
     uint8_t returnval = 0u;
     uint32_t l_idx = 0u;
@@ -291,34 +284,35 @@ QSPI_irq_transfer_block
     HAL_ASSERT(num_addr_bytes <= 4u);
     HAL_ASSERT(num_idle_cycles <= 15u);
 
-    g_rd_buffer = (uint32_t*)rd_buffer;
+    g_rd_buffer = (uint32_t *)rd_buffer;
 
     cbytes = 1u + tx_byte_size + num_addr_bytes;
     total_byte_cnt = 1u + tx_byte_size + num_addr_bytes + rd_byte_size;
 
-    do{
+    do
+    {
         reg_read = HAL_get_32bit_reg(this_qspi->base_address, STATUS);
-    } while(((reg_read) & STATUS_READY_MASK) == 0u);
+    } while (((reg_read)&STATUS_READY_MASK) == 0u);
 
     enable = INT_ENABLE_TXDONE_MASK;
 
     /* bit16 to 31 define the number of Upper bytes when count is >65535
      Write to lower 16 bit is ignored */
     HAL_set_32bit_reg(this_qspi->base_address, FRAMESUP,
-            (total_byte_cnt & FRAMESUP_BYTESUPPER_MASK));
+                      (total_byte_cnt & FRAMESUP_BYTESUPPER_MASK));
 
-    if((tx_byte_size <= 0xFFFFu) &&
-                (num_addr_bytes <= 4u) &&
-                (num_idle_cycles <= 15u))
+    if ((tx_byte_size <= 0xFFFFu) &&
+        (num_addr_bytes <= 4u) &&
+        (num_idle_cycles <= 15u))
     {
-    /* Calculating skip bits */
-    skips  = (total_byte_cnt & FRAMES_TOTALBYTES_MASK);
-    skips |= (cbytes << FRAMES_COMMANDBYTES_SHIFT);
+        /* Calculating skip bits */
+        skips = (total_byte_cnt & FRAMES_TOTALBYTES_MASK);
+        skips |= (cbytes << FRAMES_COMMANDBYTES_SHIFT);
 
-    reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
-    skips |= (((reg_read & CTRL_QMODE12_MASK) ? 1u : 0u) << FRAMES_QSPI_SHIFT);
+        reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
+        skips |= (((reg_read & CTRL_QMODE12_MASK) ? 1u : 0u) << FRAMES_QSPI_SHIFT);
 
-    skips |= ((uint32_t)num_idle_cycles) << FRAMES_IDLE_SHIFT;
+        skips |= ((uint32_t)num_idle_cycles) << FRAMES_IDLE_SHIFT;
     }
 
     skips |= FRAMES_FLAGWORD_MASK;
@@ -326,35 +320,38 @@ QSPI_irq_transfer_block
     reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
 
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-                (reg_read | CTRL_FLAGSX4_MASK));
+                      (reg_read | CTRL_FLAGSX4_MASK));
     words = cbytes / (uint32_t)4u;
 
     for (idx = 0u; idx < words; ++idx)
     {
         while ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) &
-                                 (uint32_t)STATUS_TXFIFOFULL_MASK){};
+               (uint32_t)STATUS_TXFIFOFULL_MASK)
+        {
+        };
 
         HAL_set_32bit_reg(this_qspi->base_address, X4TRANSMIT_DATA,
-                                           (uint32_t)buf32[idx]);
+                          (uint32_t)buf32[idx]);
     }
 
     reg_read = HAL_get_32bit_reg(this_qspi->base_address, CONTROL);
 
     HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-                (reg_read & (~CTRL_FLAGSX4_MASK)));
+                      (reg_read & (~CTRL_FLAGSX4_MASK)));
 
     sleep_ms(10);
     for (idx = (cbytes - (cbytes % 4u)); idx < cbytes; ++idx)
     {
         while ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) &
-                                (uint32_t)STATUS_TXFIFOFULL_MASK){};
+               (uint32_t)STATUS_TXFIFOFULL_MASK)
+        {
+        };
         HAL_set_32bit_reg(this_qspi->base_address, TRANSMIT_DATA,
-                                          (uint8_t)buf8[idx]);
+                          (uint8_t)buf8[idx]);
     }
 
     g_irq_rd_byte_size = rd_byte_size;
-    enable |= (uint32_t )(INT_ENABLE_RXDONE_MASK | INT_ENABLE_RXAVAILABLE_MASK);
-
+    enable |= (uint32_t)(INT_ENABLE_RXDONE_MASK | INT_ENABLE_RXAVAILABLE_MASK);
 
     HAL_set_32bit_reg(this_qspi->base_address, INT_ENABLE, enable);
 
@@ -364,20 +361,18 @@ QSPI_irq_transfer_block
      * the data available in RXFIFO is incorrect.
      */
     if (rd_byte_size != 0)
-       sleep_ms(10);
+        sleep_ms(10);
 
     return (returnval);
 }
 
-/***************************************************************************//**
+/***************************************************************************/
+/**
  * QSPI_set_status_handler()
  * See mss_qspi.h for details of how to use this function.
  */
-void
-QSPI_set_status_handler
-(
-    qspi_status_handler_t handler
-)
+void QSPI_set_status_handler(
+    qspi_status_handler_t handler)
 {
     if ((qspi_status_handler_t)0 != handler)
     {
@@ -385,11 +380,8 @@ QSPI_set_status_handler
     }
 }
 
-void
-qspi_isr
-(
-    qspi_instance_t *this_qspi
-)
+void qspi_isr(
+    qspi_instance_t *this_qspi)
 {
     uint32_t idx;
     static uint32_t empty = 0u;
@@ -401,61 +393,60 @@ qspi_isr
 
     if (STATUS_TXDONE_MASK == (uint32_t)(status & STATUS_TXDONE_MASK))
     {
-       g_handler(STATUS_TXDONE_MASK);
+        g_handler(STATUS_TXDONE_MASK);
 
-       HAL_set_32bit_reg(this_qspi->base_address, STATUS,
-                ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                        | (uint32_t)STATUS_TXDONE_MASK));
-
+        HAL_set_32bit_reg(this_qspi->base_address, STATUS,
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) | (uint32_t)STATUS_TXDONE_MASK));
     }
 
     if (STATUS_RXAVAILABLE_MASK == (uint32_t)(status & STATUS_RXAVAILABLE_MASK))
     {
 
-       HAL_set_32bit_reg(this_qspi->base_address, STATUS,
-                ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                        | (uint32_t)STATUS_RXAVAILABLE_MASK));
+        HAL_set_32bit_reg(this_qspi->base_address, STATUS,
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) | (uint32_t)STATUS_RXAVAILABLE_MASK));
 
-       uint8_t* buf8 = g_rd_buffer;
-       uint32_t* buf32 = g_rd_buffer;
-       uint32_t words = 0u;
+        uint8_t *buf8 = g_rd_buffer;
+        uint32_t *buf32 = g_rd_buffer;
+        uint32_t words = 0u;
 
-       words = g_irq_rd_byte_size / 4u;
+        words = g_irq_rd_byte_size / 4u;
 
-       HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-               ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, CONTROL))
-                            | (uint32_t)CTRL_FLAGSX4_MASK));
+        HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, CONTROL)) | (uint32_t)CTRL_FLAGSX4_MASK));
 
-       for (idx = 0u; idx < words; ++idx)
-       {
-           while ((HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & STATUS_RXFIFOEMPTY_MASK){};
-           buf32[idx] = HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA);
-       }
+        for (idx = 0u; idx < words; ++idx)
+        {
+            while ((HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & STATUS_RXFIFOEMPTY_MASK)
+            {
+            };
+            buf32[idx] = HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA);
+        }
 
-       HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
-               ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, CONTROL))
-                            & ~(uint32_t)(CTRL_FLAGSX4_MASK)));
+        HAL_set_32bit_reg(this_qspi->base_address, CONTROL,
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, CONTROL)) & ~(uint32_t)(CTRL_FLAGSX4_MASK)));
 
-       l_idx = (g_irq_rd_byte_size - (g_irq_rd_byte_size % 4u));
-       for (idx = l_idx; idx < g_irq_rd_byte_size; ++idx)
-       {
-           while ((HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & STATUS_RXFIFOEMPTY_MASK){};
-           buf8[idx] = HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA);
-       }
+        l_idx = (g_irq_rd_byte_size - (g_irq_rd_byte_size % 4u));
+        for (idx = l_idx; idx < g_irq_rd_byte_size; ++idx)
+        {
+            while ((HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & STATUS_RXFIFOEMPTY_MASK)
+            {
+            };
+            buf8[idx] = HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA);
+        }
 
-       uint32_t skips = 0;
+        uint32_t skips = 0;
 
-       while (0u == ((HAL_get_32bit_reg(this_qspi->base_address,
-               STATUS)) & STATUS_RXFIFOEMPTY_MASK))
-       {
-           /* Make sure that the Receive FIFO is empty and any
-              remaining data is read from it after desired bytes
-              have been received. */
-           skips = (uint64_t)(((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                   & (uint32_t)STATUS_FLAGSX4_MASK)
-                   ? (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA))
-                   : (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA)));
-       }
+        while (0u == ((HAL_get_32bit_reg(this_qspi->base_address,
+                                         STATUS)) &
+                      STATUS_RXFIFOEMPTY_MASK))
+        {
+            /* Make sure that the Receive FIFO is empty and any
+               remaining data is read from it after desired bytes
+               have been received. */
+            skips = (uint64_t)(((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) & (uint32_t)STATUS_FLAGSX4_MASK)
+                                   ? (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, X4RECEIVE_DATA))
+                                   : (uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, RECEIVE_DATA)));
+        }
     }
 
     if (STATUS_RXDONE_MASK == (uint32_t)(status & STATUS_RXDONE_MASK))
@@ -467,21 +458,16 @@ qspi_isr
 
         /* disable RXDONE, RXEMPTY, RXAVLBL interrupt */
         HAL_set_32bit_reg(this_qspi->base_address, INT_ENABLE,
-                ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, INT_ENABLE))
-                        & ~(uint32_t)(INT_ENABLE_RXDONE_MASK | INT_ENABLE_RXAVAILABLE_MASK)));
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, INT_ENABLE)) & ~(uint32_t)(INT_ENABLE_RXDONE_MASK | INT_ENABLE_RXAVAILABLE_MASK)));
 
         HAL_set_32bit_reg(this_qspi->base_address, STATUS,
-                ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS))
-                        | (uint32_t)STATUS_RXDONE_MASK));
-
+                          ((uint32_t)(HAL_get_32bit_reg(this_qspi->base_address, STATUS)) | (uint32_t)STATUS_RXDONE_MASK));
     }
 }
 
 static void
-default_status_hanlder
-(
-    uint32_t value
-)
+default_status_hanlder(
+    uint32_t value)
 {
     /* Take some default interrupt handling action here */
 }
