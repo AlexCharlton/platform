@@ -114,9 +114,10 @@ extern "C"
     /*******************************************************************************
      * Public Functions
      *******************************************************************************/
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_init(
         mss_uart_instance_t *this_uart,
@@ -139,16 +140,11 @@ extern "C"
         this_uart->tx_handler = default_tx_handler;
     }
 
-    void uart_init_rs(void)
-    {
-        MSS_UART_init(&g_mss_uart0_lo,
-                      MSS_UART_115200_BAUD,
-                      MSS_UART_DATA_8_BITS | MSS_UART_NO_PARITY | MSS_UART_ONE_STOP_BIT);
-    }
-
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /*************************************************************************
+     **/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void MSS_UART_lin_init(
         mss_uart_instance_t *this_uart,
         uint32_t baud_rate,
@@ -167,9 +163,10 @@ extern "C"
         this_uart->hw_reg->MM2 &= ~EERR_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_irda_init(
         mss_uart_instance_t *this_uart,
@@ -197,9 +194,10 @@ extern "C"
         this_uart->hw_reg->MM2 &= ~EERR_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_smartcard_init(
         mss_uart_instance_t *this_uart,
@@ -226,9 +224,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_polled_tx(
         mss_uart_instance_t *this_uart,
@@ -280,9 +279,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_polled_tx_string(
         mss_uart_instance_t *this_uart,
@@ -331,14 +331,10 @@ extern "C"
         }
     }
 
-    void uart_puts_rs(const uint8_t *p_sz_string)
-    {
-        MSS_UART_polled_tx_string(&g_mss_uart0_lo, p_sz_string);
-    }
-
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_irq_tx(
         mss_uart_instance_t *this_uart,
@@ -365,9 +361,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     int8_t
     MSS_UART_tx_complete(
         mss_uart_instance_t *this_uart)
@@ -388,9 +385,10 @@ extern "C"
         return ret_value;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     size_t
     MSS_UART_get_rx(
         mss_uart_instance_t *this_uart,
@@ -420,9 +418,10 @@ extern "C"
         return rx_size;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_irq(
         mss_uart_instance_t *this_uart,
@@ -457,9 +456,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_irq(
         mss_uart_instance_t *this_uart,
@@ -485,9 +485,10 @@ extern "C"
                                               ((uint32_t)IIRF_MASK)));
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_rx_handler(
         mss_uart_instance_t *this_uart,
@@ -514,9 +515,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_loopback(
         mss_uart_instance_t *this_uart,
@@ -563,9 +565,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * interrupt service routine.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * interrupt service routine.
+     */
     uint8_t mmuart0_plic_77_IRQHandler(void)
     {
         if (g_uart_axi_pos & UART0_POSITION_MASK)
@@ -696,9 +699,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_rxstatus_handler(
         mss_uart_instance_t *this_uart,
@@ -717,9 +721,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_tx_handler(
         mss_uart_instance_t *this_uart,
@@ -735,9 +740,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_modemstatus_handler(
         mss_uart_instance_t *this_uart,
@@ -755,9 +761,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     size_t
     MSS_UART_fill_tx_fifo(
         mss_uart_instance_t *this_uart,
@@ -798,9 +805,10 @@ extern "C"
         return size_sent;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     uint8_t
     MSS_UART_get_rx_status(
         mss_uart_instance_t *this_uart)
@@ -823,9 +831,10 @@ extern "C"
         return status;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     uint8_t
     MSS_UART_get_modem_status(
         const mss_uart_instance_t *this_uart)
@@ -848,10 +857,11 @@ extern "C"
         return status;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * MSS_UART_get_tx_status.
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * MSS_UART_get_tx_status.
+     * See mss_uart.h for details of how to use this function.
+     */
     uint8_t
     MSS_UART_get_tx_status(
         mss_uart_instance_t *this_uart)
@@ -874,9 +884,10 @@ extern "C"
         return status;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_break(
         mss_uart_instance_t *this_uart)
@@ -885,9 +896,10 @@ extern "C"
         this_uart->hw_reg->LCR |= SB_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_clear_break(
         mss_uart_instance_t *this_uart)
@@ -896,9 +908,10 @@ extern "C"
         this_uart->hw_reg->LCR &= ~SB_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_pidpei_handler(
         mss_uart_instance_t *this_uart,
@@ -916,9 +929,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_linbreak_handler(
         mss_uart_instance_t *this_uart,
@@ -936,9 +950,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_linsync_handler(
         mss_uart_instance_t *this_uart,
@@ -956,9 +971,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_nack_handler(
         mss_uart_instance_t *this_uart,
@@ -976,9 +992,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_rx_timeout_handler(
         mss_uart_instance_t *this_uart,
@@ -996,9 +1013,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_half_duplex(
         mss_uart_instance_t *this_uart)
@@ -1007,9 +1025,10 @@ extern "C"
         this_uart->hw_reg->MM2 |= ESWM_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_half_duplex(
         mss_uart_instance_t *this_uart)
@@ -1018,9 +1037,10 @@ extern "C"
         this_uart->hw_reg->MM2 &= ~ESWM_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_rx_endian(
         mss_uart_instance_t *this_uart,
@@ -1035,9 +1055,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_tx_endian(
         mss_uart_instance_t *this_uart,
@@ -1052,9 +1073,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_filter_length(
         mss_uart_instance_t *this_uart,
@@ -1069,9 +1091,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_afm(
         mss_uart_instance_t *this_uart)
@@ -1080,9 +1103,10 @@ extern "C"
         this_uart->hw_reg->MM2 |= EAFM_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_afm(
         mss_uart_instance_t *this_uart)
@@ -1092,9 +1116,10 @@ extern "C"
         this_uart->hw_reg->MM2 &= ~EAFM_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_afclear(
         mss_uart_instance_t *this_uart)
@@ -1105,9 +1130,10 @@ extern "C"
         this_uart->hw_reg->MM2 |= EAFC_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_afclear(
         mss_uart_instance_t *this_uart)
@@ -1116,9 +1142,10 @@ extern "C"
         this_uart->hw_reg->MM2 &= ~EAFC_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_rx_timeout(
         mss_uart_instance_t *this_uart,
@@ -1131,9 +1158,10 @@ extern "C"
         this_uart->hw_reg->MM0 |= ERTO_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_rx_timeout(
         mss_uart_instance_t *this_uart)
@@ -1142,9 +1170,10 @@ extern "C"
         this_uart->hw_reg->MM0 &= ~ERTO_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_tx_time_guard(
         mss_uart_instance_t *this_uart,
@@ -1157,9 +1186,10 @@ extern "C"
         this_uart->hw_reg->MM0 |= ETTG_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_disable_tx_time_guard(
         mss_uart_instance_t *this_uart)
@@ -1168,9 +1198,10 @@ extern "C"
         this_uart->hw_reg->MM0 &= ~ETTG_MASK;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_address(
         mss_uart_instance_t *this_uart,
@@ -1179,9 +1210,10 @@ extern "C"
         this_uart->hw_reg->ADR = address;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_ready_mode(
         mss_uart_instance_t *this_uart,
@@ -1196,9 +1228,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_set_usart_mode(
         mss_uart_instance_t *this_uart,
@@ -1216,9 +1249,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     void
     MSS_UART_enable_local_irq(
         mss_uart_instance_t *this_uart)
@@ -1397,9 +1431,10 @@ extern "C"
         this_uart->status = 0u;
     }
 
-    /***************************************************************************/ /**
-                                                                                   * Configure baud divisors using fractional baud rate if possible.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * Configure baud divisors using fractional baud rate if possible.
+     */
     static void
     config_baud_divisors(
         mss_uart_instance_t *this_uart,
@@ -1474,14 +1509,15 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * Interrupt service routine triggered by any MSS UART interrupt. This routine
-                                                                                   * will call the handler function appropriate to the interrupt from the
-                                                                                   * handlers previously registered with the driver through calls to the
-                                                                                   * MSS_UART_set_*_handler() functions, or it will call the default_tx_handler()
-                                                                                   * function in response to transmit interrupts if MSS_UART_irq_tx() is used to
-                                                                                   * transmit data.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * Interrupt service routine triggered by any MSS UART interrupt. This routine
+     * will call the handler function appropriate to the interrupt from the
+     * handlers previously registered with the driver through calls to the
+     * MSS_UART_set_*_handler() functions, or it will call the default_tx_handler()
+     * function in response to transmit interrupts if MSS_UART_irq_tx() is used to
+     * transmit data.
+     */
     static void
     uart_isr(
         mss_uart_instance_t *this_uart)
@@ -1606,9 +1642,10 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-                                                                                   * See mss_uart.h for details of how to use this function.
-                                                                                   */
+    /***************************************************************************/
+    /**
+     * See mss_uart.h for details of how to use this function.
+     */
     static void
     default_tx_handler(
         mss_uart_instance_t *this_uart)
@@ -1688,11 +1725,6 @@ extern "C"
             /* Enable UART instance interrupt in PLIC. */
             PLIC_EnableIRQ(plic_num);
         }
-    }
-
-    void enable_irq_rs()
-    {
-        __enable_irq();
     }
 
     static void

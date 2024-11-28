@@ -24,7 +24,7 @@ extern "C"
 }
 #endif
 
-void PLIC_init_rs(void)
+void PLIC_init(void)
 {
-    PLIC_init();
+    PLIC_init_static();
 }

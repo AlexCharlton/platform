@@ -156,9 +156,3 @@ void handle_m_soft_interrupt(void)
     /*Clear software interrupt*/
     clear_soft_interrupt();
 }
-
-void clear_soft_interrupt_rs(void)
-{
-    set_csr(mie, MIP_MSIP);
-    clear_soft_interrupt();
-}
