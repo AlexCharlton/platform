@@ -262,6 +262,12 @@ extern "C"
     */
   uint32_t MSS_TIM1_get_current_value(TIMER_TypeDef *timer);
 
+  static inline uint32_t
+  MSS_TIM1_get_current_value_static(TIMER_TypeDef *timer)
+  {
+    return timer->TIM1_VAL;
+  }
+
   /*-------------------------------------------------------------------------*/
   /**
      MSS_TIM1_load_immediate() loads the value passed by the load_value parameter
@@ -485,6 +491,12 @@ extern "C"
        This function does not return a value.
     */
   uint32_t MSS_TIM2_get_current_value(TIMER_TypeDef *timer);
+
+  static inline uint32_t
+  MSS_TIM2_get_current_value_static(TIMER_TypeDef *timer)
+  {
+    return timer->TIM2_VAL;
+  }
 
   /*-------------------------------------------------------------------------*/
   /**
