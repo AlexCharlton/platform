@@ -201,7 +201,7 @@ extern "C"
   static inline void
   MSS_TIM1_init_static(TIMER_TypeDef *timer, mss_timer_mode_t mode)
   {
-    PLIC_DisableIRQ(TIMER1_PLIC);
+    PLIC_DisableIRQ_static(TIMER1_PLIC);
     timer->TIM64_MODE = 0u;
     timer->TIM1_CTRL = TIM1_MODE_MASK & ((uint32_t)mode << TIM1_MODE_SHIFT);
     timer->TIM1_RIS = 1u;
@@ -345,7 +345,7 @@ extern "C"
   {
     timer->TIM1_CTRL |= TIM1_INTEN_MASK;
     readvalue[8] = timer->TIM1_CTRL;
-    PLIC_EnableIRQ(TIMER1_PLIC);
+    PLIC_EnableIRQ_static(TIMER1_PLIC);
   }
 
   /*-------------------------------------------------------------------------*/
@@ -365,7 +365,7 @@ extern "C"
   MSS_TIM1_disable_irq_static(TIMER_TypeDef *timer)
   {
     timer->TIM1_CTRL &= ~((uint32_t)TIM1_INTEN_MASK);
-    PLIC_DisableIRQ(TIMER1_PLIC); /* Disable timer 1 irq */
+    PLIC_DisableIRQ_static(TIMER1_PLIC); /* Disable timer 1 irq */
   }
 
   /*-------------------------------------------------------------------------*/
@@ -422,8 +422,8 @@ extern "C"
   static inline void
   MSS_TIM2_init_static(TIMER_TypeDef *timer, mss_timer_mode_t mode)
   {
-    PLIC_DisableIRQ(TIMER2_PLIC); /* Disable timer 2 irq */
-    timer->TIM64_MODE = 0u;       /* switch to 32 bits mode */
+    PLIC_DisableIRQ_static(TIMER2_PLIC); /* Disable timer 2 irq */
+    timer->TIM64_MODE = 0u;              /* switch to 32 bits mode */
 
     /* Disable timer and interrupt. Set mode (continuous/one-shot) */
     timer->TIM2_CTRL = TIM2_MODE_MASK & ((uint32_t)mode << TIM2_MODE_SHIFT);
@@ -568,7 +568,7 @@ extern "C"
   MSS_TIM2_enable_irq_static(TIMER_TypeDef *timer)
   {
     timer->TIM2_CTRL |= TIM2_INTEN_MASK;
-    PLIC_EnableIRQ(TIMER2_PLIC);
+    PLIC_EnableIRQ_static(TIMER2_PLIC);
   }
 
   /*-------------------------------------------------------------------------*/
@@ -588,7 +588,7 @@ extern "C"
   MSS_TIM2_disable_irq_static(TIMER_TypeDef *timer)
   {
     timer->TIM2_CTRL &= ~((uint32_t)TIM2_INTEN_MASK);
-    PLIC_DisableIRQ(TIMER2_PLIC); /* Disable timer 2 irq */
+    PLIC_DisableIRQ_static(TIMER2_PLIC); /* Disable timer 2 irq */
   }
 
   /*-------------------------------------------------------------------------*/
@@ -645,9 +645,9 @@ extern "C"
   static inline void
   MSS_TIM64_init_static(TIMER_TypeDef *timer, mss_timer_mode_t mode)
   {
-    PLIC_DisableIRQ(TIMER1_PLIC); /* Disable timer 1 irq */
-    PLIC_DisableIRQ(TIMER2_PLIC); /* Disable timer 2 irq */
-    timer->TIM64_MODE = 1u;       /* switch to 64 bits mode */
+    PLIC_DisableIRQ_static(TIMER1_PLIC); /* Disable timer 1 irq */
+    PLIC_DisableIRQ_static(TIMER2_PLIC); /* Disable timer 2 irq */
+    timer->TIM64_MODE = 1u;              /* switch to 64 bits mode */
 
     /* Disable timer and interrupt and set mode (continuous/one-shot) */
     timer->TIM64_CTRL = TIM64_MODE_MASK & ((uint32_t)mode << TIM64_MODE_SHIFT);
@@ -853,7 +853,7 @@ extern "C"
   MSS_TIM64_enable_irq_static(TIMER_TypeDef *timer)
   {
     timer->TIM64_CTRL |= TIM64_INTEN_MASK;
-    PLIC_EnableIRQ(TIMER1_PLIC);
+    PLIC_EnableIRQ_static(TIMER1_PLIC);
   }
 
   /*-------------------------------------------------------------------------*/
@@ -873,7 +873,7 @@ extern "C"
   MSS_TIM64_disable_irq_static(TIMER_TypeDef *timer)
   {
     timer->TIM64_CTRL &= ~((uint32_t)TIM64_INTEN_MASK);
-    PLIC_DisableIRQ(TIMER1_PLIC);
+    PLIC_DisableIRQ_static(TIMER1_PLIC);
   }
 
   /*-------------------------------------------------------------------------*/

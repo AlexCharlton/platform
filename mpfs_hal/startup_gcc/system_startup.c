@@ -76,7 +76,7 @@ __attribute__((weak)) int main_first_hart(HLS_DATA *hls)
         init_global_constructors();
 
         /* main hart init's the PLIC */
-        PLIC_init_on_reset();
+        PLIC_init_on_reset_static();
         /*
          * Start the other harts. They are put in wfi in entry.S
          * When debugging, harts are released from reset separately,
@@ -477,8 +477,8 @@ void load_virtual_rom(void)
  */
 static void init_global_constructors(void)
 {
-    void (**fun_ptr)(void) = (void (**)(void)) & __init_array_start;
-    while (fun_ptr != (void (**)(void)) & __init_array_end)
+    void (**fun_ptr)(void) = (void (**)(void))&__init_array_start;
+    while (fun_ptr != (void (**)(void))&__init_array_end)
     {
         (*fun_ptr)();
         fun_ptr++;

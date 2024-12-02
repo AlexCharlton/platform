@@ -1723,7 +1723,7 @@ extern "C"
             }
 
             /* Enable UART instance interrupt in PLIC. */
-            PLIC_EnableIRQ(plic_num);
+            PLIC_EnableIRQ_static(plic_num);
         }
     }
 
@@ -1759,7 +1759,7 @@ extern "C"
         }
 
         /* Disable UART instance interrupt in PLIC. */
-        PLIC_DisableIRQ(plic_num);
+        PLIC_DisableIRQ_static(plic_num);
     }
 
 #ifdef __cplusplus

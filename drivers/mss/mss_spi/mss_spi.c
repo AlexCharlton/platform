@@ -15,342 +15,328 @@
 #include "mss_spi.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/***************************************************************************//**
- * Mask of transfer protocol and SPO, SPH bits within control register.
- */
-#define PROTOCOL_MODE_MASK  ((uint32_t) 0x0300000Cu)
+/***************************************************************************/ /**
+                                                                               * Mask of transfer protocol and SPO, SPH bits within control register.
+                                                                               */
+#define PROTOCOL_MODE_MASK ((uint32_t)0x0300000Cu)
 
-/***************************************************************************//**
- * Mask of the frame count bits within the SPI control register.
- */
-#define TXRXDFCOUNT_MASK    ((uint32_t) 0x00FFFF00u)
-#define TXRXDFCOUNT_SHIFT   ((uint32_t) 8u)
-#define BYTESUPPER_MASK     ((uint32_t) 0xFFFF0000u)
-/***************************************************************************//**
- * SPI hardware FIFO depth.
- */
-#define RX_FIFO_SIZE    4u
-#define BIG_FIFO_SIZE   32u
+/***************************************************************************/ /**
+                                                                               * Mask of the frame count bits within the SPI control register.
+                                                                               */
+#define TXRXDFCOUNT_MASK ((uint32_t)0x00FFFF00u)
+#define TXRXDFCOUNT_SHIFT ((uint32_t)8u)
+#define BYTESUPPER_MASK ((uint32_t)0xFFFF0000u)
+/***************************************************************************/ /**
+                                                                               * SPI hardware FIFO depth.
+                                                                               */
+#define RX_FIFO_SIZE 4u
+#define BIG_FIFO_SIZE 32u
 
-/***************************************************************************//**
- * CONTROL register bit masks
- */
-#define CTRL_ENABLE_MASK    0x00000001u
-#define CTRL_MASTER_MASK    0x00000002u
+/***************************************************************************/ /**
+                                                                               * CONTROL register bit masks
+                                                                               */
+#define CTRL_ENABLE_MASK 0x00000001u
+#define CTRL_MASTER_MASK 0x00000002u
 
-/***************************************************************************//**
-  Registers bit masks
- */
+/***************************************************************************/ /**
+   Registers bit masks
+  */
 /* CONTROL register. */
-#define MASTER_MODE_MASK        0x00000002u
-#define CTRL_RX_IRQ_EN_MASK     0x00000010u
-#define CTRL_TX_IRQ_EN_MASK     0x00000020u
+#define MASTER_MODE_MASK 0x00000002u
+#define CTRL_RX_IRQ_EN_MASK 0x00000010u
+#define CTRL_TX_IRQ_EN_MASK 0x00000020u
 #define CTRL_OVFLOW_IRQ_EN_MASK 0x00000040u
-#define CTRL_URUN_IRQ_EN_MASK   0x00000080u
-#define CTRL_REG_RESET_MASK     0x80000000u
-#define BIGFIFO_MASK            0x20000000u
-#define CTRL_CLKMODE_MASK       0x10000000u
-#define SPS_MASK                0x04000000u
+#define CTRL_URUN_IRQ_EN_MASK 0x00000080u
+#define CTRL_REG_RESET_MASK 0x80000000u
+#define BIGFIFO_MASK 0x20000000u
+#define CTRL_CLKMODE_MASK 0x10000000u
+#define SPS_MASK 0x04000000u
 
 /* CONTROL2 register */
-#define C2_ENABLE_CMD_IRQ_MASK     0x00000010u
-#define C2_ENABLE_SSEND_IRQ_MASK   0x00000020u
+#define C2_ENABLE_CMD_IRQ_MASK 0x00000010u
+#define C2_ENABLE_SSEND_IRQ_MASK 0x00000020u
 
 /* STATUS register */
-#define TX_DONE_MASK            0x00000001u
-#define RX_DATA_READY_MASK      0x00000002u
-#define RX_OVERFLOW_MASK        0x00000004u
-#define RX_FIFO_EMPTY_MASK      0x00000040u
-#define TX_FIFO_FULL_MASK       0x00000100u
-#define TX_FIFO_EMPTY_MASK      0x00000400u
+#define TX_DONE_MASK 0x00000001u
+#define RX_DATA_READY_MASK 0x00000002u
+#define RX_OVERFLOW_MASK 0x00000004u
+#define RX_FIFO_EMPTY_MASK 0x00000040u
+#define TX_FIFO_FULL_MASK 0x00000100u
+#define TX_FIFO_EMPTY_MASK 0x00000400u
 
 /* MIS register. */
-#define TXDONE_IRQ_MASK         0x00000001u
-#define RXDONE_IRQ_MASK         0x00000002u
-#define RXOVFLOW_IRQ_MASK       0x00000004u
-#define TXURUN_IRQ_MASK         0x00000008u
-#define CMD_IRQ_MASK            0x00000010u
-#define SSEND_IRQ_MASK          0x00000020u
+#define TXDONE_IRQ_MASK 0x00000001u
+#define RXDONE_IRQ_MASK 0x00000002u
+#define RXOVFLOW_IRQ_MASK 0x00000004u
+#define TXURUN_IRQ_MASK 0x00000008u
+#define CMD_IRQ_MASK 0x00000010u
+#define SSEND_IRQ_MASK 0x00000020u
 
 /* COMMAND register */
-#define AUTOFILL_MASK           0x00000001u
-#define TX_FIFO_RESET_MASK      0x00000008u
-#define RX_FIFO_RESET_MASK      0x00000004u
+#define AUTOFILL_MASK 0x00000001u
+#define TX_FIFO_RESET_MASK 0x00000008u
+#define RX_FIFO_RESET_MASK 0x00000004u
 
-/***************************************************************************//**
-  Maximum frequency
- */
-#define SPI_MAX_CLK             20000000
+/***************************************************************************/ /**
+   Maximum frequency
+  */
+#define SPI_MAX_CLK 20000000
 
-/***************************************************************************//**
- *
- */
-#define RX_IRQ_THRESHOLD    (BIG_FIFO_SIZE / 2u)
+/***************************************************************************/ /**
+                                                                               *
+                                                                               */
+#define RX_IRQ_THRESHOLD (BIG_FIFO_SIZE / 2u)
 
-/***************************************************************************//**
-  Marker used to detect that the configuration has not been selected for a
-  specific slave when operating as a master.
- */
-#define NOT_CONFIGURED  0xFFFFFFFFu
+/***************************************************************************/ /**
+   Marker used to detect that the configuration has not been selected for a
+   specific slave when operating as a master.
+  */
+#define NOT_CONFIGURED 0xFFFFFFFFu
 
-/***************************************************************************//**
-  Maximum frame length
- */
-#define MAX_FRAME_LENGTH        32u
+/***************************************************************************/ /**
+   Maximum frame length
+  */
+#define MAX_FRAME_LENGTH 32u
 
-/***************************************************************************//**
- * SPI instance data structures for SPI0 and SPI1. A pointer to these data
- * structures must be used as first parameter to any of the SPI driver functions
- * to identify the SPI hardware block that will perform the requested operation.
- */
-mss_spi_instance_t g_mss_spi0_lo;
-mss_spi_instance_t g_mss_spi1_lo;
+    /***************************************************************************/ /**
+                                                                                   * SPI instance data structures for SPI0 and SPI1. A pointer to these data
+                                                                                   * structures must be used as first parameter to any of the SPI driver functions
+                                                                                   * to identify the SPI hardware block that will perform the requested operation.
+                                                                                   */
+    mss_spi_instance_t g_mss_spi0_lo;
+    mss_spi_instance_t g_mss_spi1_lo;
 
-mss_spi_instance_t g_mss_spi0_hi;
-mss_spi_instance_t g_mss_spi1_hi;
+    mss_spi_instance_t g_mss_spi0_hi;
+    mss_spi_instance_t g_mss_spi1_hi;
 
-/***************************************************************************//*
- *  This peripheral tracks if the SPI peripheral is located on S5 or S6 on AXI
- *  switch. This will be used to determine which SPI instance is to be passed
- *  to SPI interrupt handler. Value 0 = S5(SPI_LO)  value 1 = S6(SPI_HI).
- *  Bit positions
- *  0 -> SPI0
- *  1 -> SPI1
- */
-static uint8_t g_spi_axi_pos = 0u;
+    /***************************************************************************/ /*
+                                                                                   *  This peripheral tracks if the SPI peripheral is located on S5 or S6 on AXI
+                                                                                   *  switch. This will be used to determine which SPI instance is to be passed
+                                                                                   *  to SPI interrupt handler. Value 0 = S5(SPI_LO)  value 1 = S6(SPI_HI).
+                                                                                   *  Bit positions
+                                                                                   *  0 -> SPI0
+                                                                                   *  1 -> SPI1
+                                                                                   */
+    static uint8_t g_spi_axi_pos = 0u;
 
-/***************************************************************************//**
-  local functions
- */
-static void recover_from_rx_overflow(mss_spi_instance_t * this_spi);
-static void fill_slave_tx_fifo(mss_spi_instance_t * this_spi);
-static void read_slave_rx_fifo(mss_spi_instance_t * this_spi);
-static void mss_spi_isr(mss_spi_instance_t * this_spi);
+    /***************************************************************************/ /**
+       local functions
+      */
+    static void recover_from_rx_overflow(mss_spi_instance_t *this_spi);
+    static void fill_slave_tx_fifo(mss_spi_instance_t *this_spi);
+    static void read_slave_rx_fifo(mss_spi_instance_t *this_spi);
+    static void mss_spi_isr(mss_spi_instance_t *this_spi);
 
-/***************************************************************************//**
- * MSS_SPI_init()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_init
-(
-    mss_spi_instance_t * this_spi
-)
-{
-    uint16_t slave;
-
-ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-        || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
-
-    /* Initialize SPI driver instance data. Relies on the majority
-     * of data requiring 0 for initial state so we just need to fill
-     * with 0s and finish off with a small number of non zero values.
-     * Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ( this_spi->irqn );
-
-    memset(this_spi, 0, sizeof(mss_spi_instance_t));
-
-    this_spi->cmd_done = 1u;
-
-    for (slave = 0u; slave < (uint16_t)MSS_SPI_MAX_NB_OF_SLAVES; slave++)
+    /***************************************************************************/ /**
+                                                                                   * MSS_SPI_init()
+                                                                                   * See "mss_spi.h" for details of how to use this function.
+                                                                                   */
+    void MSS_SPI_init(
+        mss_spi_instance_t *this_spi)
     {
-        this_spi->slaves_cfg[slave].ctrl_reg = NOT_CONFIGURED;
+        uint16_t slave;
+
+        ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+
+        /* Initialize SPI driver instance data. Relies on the majority
+         * of data requiring 0 for initial state so we just need to fill
+         * with 0s and finish off with a small number of non zero values.
+         * Shut down interrupts from the MSS SPI while we do this */
+        PLIC_DisableIRQ_static(this_spi->irqn);
+
+        memset(this_spi, 0, sizeof(mss_spi_instance_t));
+
+        this_spi->cmd_done = 1u;
+
+        for (slave = 0u; slave < (uint16_t)MSS_SPI_MAX_NB_OF_SLAVES; slave++)
+        {
+            this_spi->slaves_cfg[slave].ctrl_reg = NOT_CONFIGURED;
+        }
+
+        if (&g_mss_spi0_lo == this_spi)
+        {
+            this_spi->hw_reg = MSS_SPI0_LO_BASE;
+            this_spi->irqn = SPI0_PLIC;
+            g_spi_axi_pos &= ~0x01u;
+        }
+        else if (&g_mss_spi1_lo == this_spi)
+        {
+            this_spi->hw_reg = MSS_SPI1_LO_BASE;
+            this_spi->irqn = SPI1_PLIC;
+            g_spi_axi_pos &= ~0x02u;
+        }
+        else if (&g_mss_spi0_hi == this_spi)
+        {
+            this_spi->hw_reg = MSS_SPI0_HI_BASE;
+            this_spi->irqn = SPI0_PLIC;
+            g_spi_axi_pos |= 0x01u;
+        }
+        else if (&g_mss_spi1_hi == this_spi)
+        {
+            this_spi->hw_reg = MSS_SPI1_HI_BASE;
+            this_spi->irqn = SPI1_PLIC;
+            g_spi_axi_pos |= 0x02u;
+        }
+        else
+        {
+            ASSERT(0);
+        }
+
+        /* De-assert reset bit. */
+        this_spi->hw_reg->CONTROL &= ~CTRL_REG_RESET_MASK;
     }
 
-    if (&g_mss_spi0_lo == this_spi)
+    /***************************************************************************/ /**
+                                                                                   * MSS_SPI_configure_slave_mode()
+                                                                                   * See "mss_spi.h" for details of how to use this function.
+                                                                                   */
+    void MSS_SPI_configure_slave_mode(
+        mss_spi_instance_t *this_spi,
+        mss_spi_protocol_mode_t protocol_mode,
+        uint8_t frame_bit_length,
+        mss_spi_oveflow_handler_t recieve_buffer_overflow_handler)
     {
-        this_spi->hw_reg = MSS_SPI0_LO_BASE;
-        this_spi->irqn = SPI0_PLIC;
-        g_spi_axi_pos &= ~0x01u;
-    }
-    else if (&g_mss_spi1_lo == this_spi)
-    {
-        this_spi->hw_reg = MSS_SPI1_LO_BASE;
-        this_spi->irqn = SPI1_PLIC;
-        g_spi_axi_pos &= ~0x02u;
-    }
-    else if (&g_mss_spi0_hi == this_spi)
-    {
-        this_spi->hw_reg = MSS_SPI0_HI_BASE;
-        this_spi->irqn = SPI0_PLIC;
-        g_spi_axi_pos |= 0x01u;
-    }
-    else if (&g_mss_spi1_hi == this_spi)
-    {
-        this_spi->hw_reg = MSS_SPI1_HI_BASE;
-        this_spi->irqn = SPI1_PLIC;
-        g_spi_axi_pos |= 0x02u;
-    }
-    else
-    {
-        ASSERT(0);
-    }
+        ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+        ASSERT(frame_bit_length <= MAX_FRAME_LENGTH);
 
-    /* De-assert reset bit. */
-    this_spi->hw_reg->CONTROL &= ~CTRL_REG_RESET_MASK;
-}
-
-/***************************************************************************//**
- * MSS_SPI_configure_slave_mode()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_configure_slave_mode
-(
-    mss_spi_instance_t * this_spi,
-    mss_spi_protocol_mode_t protocol_mode,
-    uint8_t frame_bit_length,
-    mss_spi_oveflow_handler_t recieve_buffer_overflow_handler
-)
-{
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
-    ASSERT(frame_bit_length <= MAX_FRAME_LENGTH);
-
-    /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
-
-    /* Registering MSS SPI overflow handler to the SPI instance */
-    this_spi->buffer_overflow_handler = recieve_buffer_overflow_handler;
-
-    /* Don't yet know what slave transfer mode will be used */
-    this_spi->slave_xfer_mode = MSS_SPI_SLAVE_XFER_NONE;
-
-    /* Set the mode. */
-    this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_MASTER_MASK;
-
-    /* Set the protocol mode */
-    this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~PROTOCOL_MODE_MASK)
-                                | (uint32_t)protocol_mode | BIGFIFO_MASK;
-
-    /* Set number of data frames to 1 by default */
-    this_spi->hw_reg->FRAMESUP = 0u;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK)
-                                | ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
-
-    this_spi->hw_reg->FRAMESIZE = frame_bit_length;
-    this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
-
-    /* Re-enable interrupts */
-    PLIC_EnableIRQ(this_spi->irqn);
-}
-
-/***************************************************************************//**
- * MSS_SPI_configure_master_mode()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_configure_master_mode
-(
-    mss_spi_instance_t *    this_spi,
-    mss_spi_slave_t         slave,
-    mss_spi_protocol_mode_t protocol_mode,
-    uint32_t                clk_div,
-    uint8_t                 frame_bit_length,
-    mss_spi_oveflow_handler_t recieve_buffer_overflow_handler
-)
-{
-    uint64_t pclk_freq;
-    uint64_t spi_clk;
-
-    pclk_freq = LIBERO_SETTING_MSS_APB_AHB_CLK;
-    spi_clk = pclk_freq /clk_div;
-
-    ASSERT(spi_clk <= SPI_MAX_CLK);
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
-    ASSERT(slave < MSS_SPI_MAX_NB_OF_SLAVES);
-    ASSERT(frame_bit_length <= MAX_FRAME_LENGTH);
-
-    /* Check that the requested clock divider is within range and even number */
-    ASSERT(clk_div >= 2u);
-    ASSERT(clk_div <= 512u);
-    ASSERT(0u == (clk_div & 0x00000001U));
-
-    if(spi_clk <= SPI_MAX_CLK)
-    {
         /* Shut down interrupts from the MSS SPI while we do this */
-        PLIC_DisableIRQ( this_spi->irqn );
+        PLIC_DisableIRQ_static(this_spi->irqn);
 
         /* Registering MSS SPI overflow handler to the SPI instance */
         this_spi->buffer_overflow_handler = recieve_buffer_overflow_handler;
 
-        /* Reset slave transfer mode to unknown to wipe slate clean */
+        /* Don't yet know what slave transfer mode will be used */
         this_spi->slave_xfer_mode = MSS_SPI_SLAVE_XFER_NONE;
 
         /* Set the mode. */
+        this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_MASTER_MASK;
+
+        /* Set the protocol mode */
         this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
-        this_spi->hw_reg->CONTROL |= CTRL_MASTER_MASK;
+        this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~PROTOCOL_MODE_MASK) | (uint32_t)protocol_mode | BIGFIFO_MASK;
+
+        /* Set number of data frames to 1 by default */
+        this_spi->hw_reg->FRAMESUP = 0u;
+        this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
+
+        this_spi->hw_reg->FRAMESIZE = frame_bit_length;
         this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
 
-        /* Keep track of the required register configuration for this slave.
-         * These values will be used by the MSS_SPI_set_slave_select() function
-         * to configure the master to match the slave being selected. */
-        if (slave < MSS_SPI_MAX_NB_OF_SLAVES)
-        {
-            uint32_t clk_gen;
-
-            /* Setting the SPS bit ensures the slave select remains asserted even
-             * if we don't keep the TX FIFO filled in block mode. We only do it for
-             * Motorola modes and if you need the slave selected deselected between
-             * frames in modes 0 or 2 then remove SPS_MASK from below. */
-            if ((MSS_SPI_MODE0 == protocol_mode) ||
-               (MSS_SPI_MODE1 == protocol_mode) ||
-               (MSS_SPI_MODE2 == protocol_mode) ||
-               (MSS_SPI_MODE3 == protocol_mode))
-            {
-                this_spi->slaves_cfg[slave].ctrl_reg = MASTER_MODE_MASK | SPS_MASK |
-                                                  BIGFIFO_MASK | CTRL_CLKMODE_MASK |
-                                                  (uint32_t)protocol_mode |
-                                                  ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
-            }
-            else
-            {
-                this_spi->slaves_cfg[slave].ctrl_reg = MASTER_MODE_MASK |
-                                                BIGFIFO_MASK | CTRL_CLKMODE_MASK |
-                                                (uint32_t)protocol_mode |
-                                                ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
-            }
-            this_spi->slaves_cfg[slave].txrxdf_size_reg = frame_bit_length;
-
-            clk_gen = (clk_div / 2u) - (uint32_t)1u;
-            this_spi->slaves_cfg[slave].clk_gen = (uint8_t)clk_gen;
-        }
+        /* Re-enable interrupts */
+        PLIC_EnableIRQ_static(this_spi->irqn);
     }
 
-    /* Re enable interrupts */
-    PLIC_EnableIRQ( this_spi->irqn );
-}
+    /***************************************************************************/ /**
+                                                                                   * MSS_SPI_configure_master_mode()
+                                                                                   * See "mss_spi.h" for details of how to use this function.
+                                                                                   */
+    void MSS_SPI_configure_master_mode(
+        mss_spi_instance_t *this_spi,
+        mss_spi_slave_t slave,
+        mss_spi_protocol_mode_t protocol_mode,
+        uint32_t clk_div,
+        uint8_t frame_bit_length,
+        mss_spi_oveflow_handler_t recieve_buffer_overflow_handler)
+    {
+        uint64_t pclk_freq;
+        uint64_t spi_clk;
 
-/***************************************************************************//**
- * MSS_SPI_set_slave_select()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_slave_select
-(
-    mss_spi_instance_t * this_spi,
-    mss_spi_slave_t slave
-)
-{
-    uint32_t rx_overflow;
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+        pclk_freq = LIBERO_SETTING_MSS_APB_AHB_CLK;
+        spi_clk = pclk_freq / clk_div;
+
+        ASSERT(spi_clk <= SPI_MAX_CLK);
+        ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+        ASSERT(slave < MSS_SPI_MAX_NB_OF_SLAVES);
+        ASSERT(frame_bit_length <= MAX_FRAME_LENGTH);
+
+        /* Check that the requested clock divider is within range and even number */
+        ASSERT(clk_div >= 2u);
+        ASSERT(clk_div <= 512u);
+        ASSERT(0u == (clk_div & 0x00000001U));
+
+        if (spi_clk <= SPI_MAX_CLK)
+        {
+            /* Shut down interrupts from the MSS SPI while we do this */
+            PLIC_DisableIRQ_static(this_spi->irqn);
+
+            /* Registering MSS SPI overflow handler to the SPI instance */
+            this_spi->buffer_overflow_handler = recieve_buffer_overflow_handler;
+
+            /* Reset slave transfer mode to unknown to wipe slate clean */
+            this_spi->slave_xfer_mode = MSS_SPI_SLAVE_XFER_NONE;
+
+            /* Set the mode. */
+            this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
+            this_spi->hw_reg->CONTROL |= CTRL_MASTER_MASK;
+            this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
+
+            /* Keep track of the required register configuration for this slave.
+             * These values will be used by the MSS_SPI_set_slave_select() function
+             * to configure the master to match the slave being selected. */
+            if (slave < MSS_SPI_MAX_NB_OF_SLAVES)
+            {
+                uint32_t clk_gen;
+
+                /* Setting the SPS bit ensures the slave select remains asserted even
+                 * if we don't keep the TX FIFO filled in block mode. We only do it for
+                 * Motorola modes and if you need the slave selected deselected between
+                 * frames in modes 0 or 2 then remove SPS_MASK from below. */
+                if ((MSS_SPI_MODE0 == protocol_mode) ||
+                    (MSS_SPI_MODE1 == protocol_mode) ||
+                    (MSS_SPI_MODE2 == protocol_mode) ||
+                    (MSS_SPI_MODE3 == protocol_mode))
+                {
+                    this_spi->slaves_cfg[slave].ctrl_reg = MASTER_MODE_MASK | SPS_MASK |
+                                                           BIGFIFO_MASK | CTRL_CLKMODE_MASK |
+                                                           (uint32_t)protocol_mode |
+                                                           ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
+                }
+                else
+                {
+                    this_spi->slaves_cfg[slave].ctrl_reg = MASTER_MODE_MASK |
+                                                           BIGFIFO_MASK | CTRL_CLKMODE_MASK |
+                                                           (uint32_t)protocol_mode |
+                                                           ((uint32_t)1 << TXRXDFCOUNT_SHIFT);
+                }
+                this_spi->slaves_cfg[slave].txrxdf_size_reg = frame_bit_length;
+
+                clk_gen = (clk_div / 2u) - (uint32_t)1u;
+                this_spi->slaves_cfg[slave].clk_gen = (uint8_t)clk_gen;
+            }
+        }
+
+        /* Re enable interrupts */
+        PLIC_EnableIRQ_static(this_spi->irqn);
+    }
+
+    /***************************************************************************/ /**
+                                                                                   * MSS_SPI_set_slave_select()
+                                                                                   * See "mss_spi.h" for details of how to use this function.
+                                                                                   */
+    void MSS_SPI_set_slave_select(
+        mss_spi_instance_t *this_spi,
+        mss_spi_slave_t slave)
+        PLIC_EnableIRQ_static
+        uint32_t rx_overflow;
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI master. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-               == CTRL_MASTER_MASK);
+    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) == CTRL_MASTER_MASK);
 
     ASSERT(this_spi->slaves_cfg[slave].ctrl_reg != NOT_CONFIGURED);
 
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ( this_spi->irqn );
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Recover from receive overflow. */
     rx_overflow = this_spi->hw_reg->STATUS & RX_OVERFLOW_MASK;
     if (rx_overflow > 0U)
     {
-         recover_from_rx_overflow(this_spi);
+        recover_from_rx_overflow(this_spi);
     }
 
     /* Set the clock rate. */
@@ -358,7 +344,7 @@ void MSS_SPI_set_slave_select
     this_spi->hw_reg->CONTROL = this_spi->slaves_cfg[slave].ctrl_reg;
     this_spi->hw_reg->CLK_GEN = (uint32_t)(this_spi->slaves_cfg[slave].clk_gen);
     this_spi->hw_reg->FRAMESIZE =
-            (uint32_t)(this_spi->slaves_cfg[slave].txrxdf_size_reg);
+        (uint32_t)(this_spi->slaves_cfg[slave].txrxdf_size_reg);
 
     this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
 
@@ -366,65 +352,56 @@ void MSS_SPI_set_slave_select
     this_spi->hw_reg->SLAVE_SELECT |= ((uint32_t)1 << (uint32_t)slave);
 
     /* Re enable interrupts */
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_clear_slave_select()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_clear_slave_select
-(
-    mss_spi_instance_t * this_spi,
-    mss_spi_slave_t slave
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_clear_slave_select()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_clear_slave_select(
+    mss_spi_instance_t *this_spi,
+    mss_spi_slave_t slave)
 {
     uint32_t rx_overflow;
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
-    /* This function is only intended to be used with an SPI master. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-               == CTRL_MASTER_MASK);
+    PLIC_EnableIRQ_staticon is only intended to be used with an SPI master.*/
+        ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) == CTRL_MASTER_MASK);
 
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ( this_spi->irqn );
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Recover from receive overflow. */
     rx_overflow = this_spi->hw_reg->STATUS & RX_OVERFLOW_MASK;
     if (rx_overflow > 0U)
     {
-         recover_from_rx_overflow(this_spi);
+        recover_from_rx_overflow(this_spi);
     }
     this_spi->hw_reg->SLAVE_SELECT &= ~((uint32_t)1 << (uint32_t)slave);
 
     /* Re enable interrupts */
-    PLIC_EnableIRQ( this_spi->irqn );
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_transfer_frame()
- * See "mss_spi.h" for details of how to use this function.
- */
-uint32_t MSS_SPI_transfer_frame
-(
-    mss_spi_instance_t * this_spi,
-    uint32_t tx_bits
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_transfer_frame()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+uint32_t MSS_SPI_transfer_frame(
+    mss_spi_instance_t *this_spi,
+    uint32_t tx_bits)
 {
     uint32_t rx_ready;
     uint32_t tx_done;
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI master. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-              == CTRL_MASTER_MASK);
+    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) == CTRL_MASTER_MASK);
 
     /* Ensure single frame transfer selected so interrupts work correctly */
     this_spi->hw_reg->FRAMESUP = 0u;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK)
-                                | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
+    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
 
     /* Flush the Tx and Rx FIFOs. */
     this_spi->hw_reg->COMMAND |= ((uint32_t)TX_FIFO_RESET_MASK |
@@ -449,40 +426,35 @@ uint32_t MSS_SPI_transfer_frame
     }
 
     /* Return Rx data. */
-    return( this_spi->hw_reg->RX_DATA );
+    return (this_spi->hw_reg->RX_DATA);
 }
 
-/***************************************************************************//**
- * MSS_SPI_transfer_block()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_transfer_block
-(
-    mss_spi_instance_t * this_spi,
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_transfer_block()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_transfer_block(
+    mss_spi_instance_t *this_spi,
     const uint8_t cmd_buffer[],
     uint32_t cmd_byte_size,
     uint8_t rd_buffer[],
-    uint32_t rd_byte_size
-)
+    uint32_t rd_byte_size)
 {
-        MSS_SPI_transfer_block_store_all_resp(this_spi, cmd_buffer, cmd_byte_size,
-            rd_buffer, rd_byte_size, NULL);
-
+    MSS_SPI_transfer_block_store_all_resp(this_spi, cmd_buffer, cmd_byte_size,
+                                          rd_buffer, rd_byte_size, NULL);
 }
 
-/***************************************************************************//**
- * MSS_SPI_transfer_block_store_all_resp()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_transfer_block_store_all_resp
-(
-    mss_spi_instance_t * this_spi,
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_transfer_block_store_all_resp()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_transfer_block_store_all_resp(
+    mss_spi_instance_t *this_spi,
     const uint8_t cmd_buffer[],
     uint32_t cmd_byte_size,
     uint8_t rd_data_buffer[],
     uint32_t rd_byte_size,
-    uint8_t cmd_response_buffer[]
-)
+    uint8_t cmd_response_buffer[])
 {
     uint32_t transfer_idx = 0u;
     uint32_t tx_idx;
@@ -494,14 +466,12 @@ void MSS_SPI_transfer_block_store_all_resp
     uint32_t rx_overflow;
     uint32_t rx_fifo_empty;
 
-    uint32_t transfer_size;     /* Total number of bytes transferred. */
+    uint32_t transfer_size; /* Total number of bytes transferred. */
 
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI master. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-                == CTRL_MASTER_MASK);
+    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) == CTRL_MASTER_MASK);
 
     /* Compute number of bytes to transfer. */
     transfer_size = cmd_byte_size + rd_byte_size;
@@ -524,15 +494,14 @@ void MSS_SPI_transfer_block_store_all_resp
     rx_overflow = this_spi->hw_reg->STATUS & RX_OVERFLOW_MASK;
     if (rx_overflow > 0U)
     {
-         recover_from_rx_overflow(this_spi);
+        recover_from_rx_overflow(this_spi);
     }
 
     /* Set frame size to 8 bits and the frame count to the transfer size. */
     this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
     this_spi->hw_reg->FRAMESUP = frame_count & BYTESUPPER_MASK;
     this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) |
-                                ((frame_count << TXRXDFCOUNT_SHIFT)
-                                 & TXRXDFCOUNT_MASK);
+                                ((frame_count << TXRXDFCOUNT_SHIFT) & TXRXDFCOUNT_MASK);
 
     this_spi->hw_reg->FRAMESIZE = MSS_SPI_BLOCK_TRANSFER_FRAME_SIZE;
     this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
@@ -580,7 +549,7 @@ void MSS_SPI_transfer_block_store_all_resp
                 }
                 ++rx_idx;
             }
-            else if(cmd_response_buffer != NULL)
+            else if (cmd_response_buffer != NULL)
             {
                 cmd_response_buffer[transfer_idx] = (uint8_t)rx_raw;
             }
@@ -613,26 +582,22 @@ void MSS_SPI_transfer_block_store_all_resp
     }
 }
 
-/***************************************************************************//**
- * MSS_SPI_set_frame_rx_handler()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_frame_rx_handler
-(
-    mss_spi_instance_t * this_spi,
-    mss_spi_frame_rx_handler_t rx_handler
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_set_frame_rx_handler()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_set_frame_rx_handler(
+    mss_spi_instance_t *this_spi,
+    mss_spi_frame_rx_handler_t rx_handler)
 {
     uint32_t tx_fifo_empty;
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI slave. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-                != CTRL_MASTER_MASK);
+    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) != CTRL_MASTER_MASK);
 
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ( this_spi->irqn );
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Disable block Rx handlers as they are mutually exclusive. */
     this_spi->block_rx_handler = 0u;
@@ -653,8 +618,7 @@ void MSS_SPI_set_frame_rx_handler
 
     /* Ensure single frame transfer selected so interrupts work correctly */
     this_spi->hw_reg->FRAMESUP = 0u;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK)
-                                | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
+    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
 
     /* Disable block specific interrupts */
     this_spi->hw_reg->CONTROL2 &= ~(uint32_t)C2_ENABLE_CMD_IRQ_MASK;
@@ -672,28 +636,24 @@ void MSS_SPI_set_frame_rx_handler
                                   (uint32_t)CTRL_OVFLOW_IRQ_EN_MASK |
                                   (uint32_t)CTRL_RX_IRQ_EN_MASK);
 
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_set_slave_tx_frame()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_slave_tx_frame
-(
-    mss_spi_instance_t * this_spi,
-    uint32_t frame_value
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_set_slave_tx_frame()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_set_slave_tx_frame(
+    mss_spi_instance_t *this_spi,
+    uint32_t frame_value)
 {
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI slave. */
-    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK)
-                != CTRL_MASTER_MASK);
+    ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) != CTRL_MASTER_MASK);
 
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Make sure correct mode is selected */
     this_spi->slave_xfer_mode = MSS_SPI_SLAVE_XFER_FRAME;
@@ -721,8 +681,7 @@ void MSS_SPI_set_slave_tx_frame
      * as it seems that doing these in the opposite order causes the receive
      * and transmit interrupts to be disabled.*/
     this_spi->hw_reg->FRAMESUP = 0u;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK)
-                                | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
+    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
 
     /* Load frame into Tx data register. */
     this_spi->hw_reg->TX_DATA = this_spi->slave_tx_frame;
@@ -747,33 +706,30 @@ void MSS_SPI_set_slave_tx_frame
                                   (uint32_t)CTRL_OVFLOW_IRQ_EN_MASK |
                                   (uint32_t)CTRL_RX_IRQ_EN_MASK);
 
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_set_slave_block_buffers()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_slave_block_buffers
-(
-    mss_spi_instance_t * this_spi,
-    const uint8_t * tx_buffer,
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_set_slave_block_buffers()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_set_slave_block_buffers(
+    mss_spi_instance_t *this_spi,
+    const uint8_t *tx_buffer,
     uint32_t tx_buff_size,
-    uint8_t * rx_buffer,
+    uint8_t *rx_buffer,
     uint32_t rx_buff_size,
-    mss_spi_block_rx_handler_t block_rx_handler
-)
+    mss_spi_block_rx_handler_t block_rx_handler)
 {
     uint32_t frame_count;
     uint32_t done = 0u;
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     /* This function is only intended to be used with an SPI slave. */
     ASSERT((this_spi->hw_reg->CONTROL & CTRL_MASTER_MASK) != CTRL_MASTER_MASK);
 
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Make sure correct mode is selected */
     this_spi->slave_xfer_mode = MSS_SPI_SLAVE_XFER_BLOCK;
@@ -806,13 +762,12 @@ void MSS_SPI_set_slave_block_buffers
 
     /* Flush the Tx and Rx FIFOs.
      * Please note this does not have any effect on A2F200. */
-    this_spi->hw_reg->COMMAND |= ((uint32_t)TX_FIFO_RESET_MASK
-                                | (uint32_t)RX_FIFO_RESET_MASK);
+    this_spi->hw_reg->COMMAND |= ((uint32_t)TX_FIFO_RESET_MASK | (uint32_t)RX_FIFO_RESET_MASK);
 
     /* Recover from receive overflow if needs be */
     if (0u != (this_spi->hw_reg->STATUS & RX_OVERFLOW_MASK))
     {
-         recover_from_rx_overflow(this_spi);
+        recover_from_rx_overflow(this_spi);
     }
 
     /* Flush Rx FIFO in case we are executing on A2F200. */
@@ -828,14 +783,12 @@ void MSS_SPI_set_slave_block_buffers
 
     this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
     this_spi->hw_reg->FRAMESUP = frame_count & BYTESUPPER_MASK;
-    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK)
-                                | (frame_count << TXRXDFCOUNT_SHIFT);
+    this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | (frame_count << TXRXDFCOUNT_SHIFT);
     this_spi->hw_reg->FRAMESIZE = MSS_SPI_BLOCK_TRANSFER_FRAME_SIZE;
     this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
 
     /* Load the transmit FIFO. */
-    while ((0u == (this_spi->hw_reg->STATUS & TX_FIFO_FULL_MASK))
-            && (0u == done))
+    while ((0u == (this_spi->hw_reg->STATUS & TX_FIFO_FULL_MASK)) && (0u == done))
     {
         if (this_spi->slave_tx_idx < this_spi->slave_tx_size)
         {
@@ -892,26 +845,24 @@ void MSS_SPI_set_slave_block_buffers
                                   (uint32_t)CTRL_OVFLOW_IRQ_EN_MASK |
                                   (uint32_t)CTRL_RX_IRQ_EN_MASK);
 
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_set_cmd_handler()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_cmd_handler
-(
-    mss_spi_instance_t * this_spi,
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_set_cmd_handler()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_set_cmd_handler(
+    mss_spi_instance_t *this_spi,
     mss_spi_block_rx_handler_t cmd_handler,
-    uint32_t cmd_size
-)
+    uint32_t cmd_size)
 {
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     /* Make sure response state is cleared down */
-    this_spi->resp_tx_buffer   = 0u;
-    this_spi->resp_buff_size   = 0u;
+    this_spi->resp_tx_buffer = 0u;
+    this_spi->resp_buff_size = 0u;
     this_spi->resp_buff_tx_idx = 0u;
 
     if ((mss_spi_block_rx_handler_t)0 == cmd_handler)
@@ -936,12 +887,12 @@ void MSS_SPI_set_cmd_handler
         /* Flush the Tx FIFO. Please note this does not have any effect on
          * A2F200. */
         this_spi->hw_reg->COMMAND |= ((uint32_t)TX_FIFO_RESET_MASK |
-                (uint32_t)RX_FIFO_RESET_MASK);
+                                      (uint32_t)RX_FIFO_RESET_MASK);
 
         /* Reload TX FIFO as MSS_SPI_set_slave_block_buffers() may have zero
          * filled the FIFO if command handler was not in place when it was
          * called and so the first frame sent could be wrong. */
-        this_spi->slave_tx_idx    = 0u;
+        this_spi->slave_tx_idx = 0u;
         fill_slave_tx_fifo(this_spi);
 
         /* Make sure to clear any pending command interrupts otherwise we will
@@ -950,19 +901,17 @@ void MSS_SPI_set_cmd_handler
         this_spi->hw_reg->CONTROL2 |= C2_ENABLE_CMD_IRQ_MASK;
     }
 
-    PLIC_EnableIRQ(this_spi->irqn); /* Safe to allow interrupts again */
+    PLIC_EnableIRQ_static(this_spi->irqn); /* Safe to allow interrupts again */
 }
 
-/***************************************************************************//**
- * MSS_SPI_set_cmd_response()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_set_cmd_response
-(
-    mss_spi_instance_t * this_spi,
-    const uint8_t * resp_tx_buffer,
-    uint32_t resp_buff_size
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_set_cmd_response()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_set_cmd_response(
+    mss_spi_instance_t *this_spi,
+    const uint8_t *resp_tx_buffer,
+    uint32_t resp_buff_size)
 {
     this_spi->resp_tx_buffer = resp_tx_buffer;
     this_spi->resp_buff_size = resp_buff_size;
@@ -973,50 +922,44 @@ void MSS_SPI_set_cmd_response
     fill_slave_tx_fifo(this_spi);
 }
 
-/***************************************************************************//**
- * MSS_SPI_enable()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_enable
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_enable()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_enable(
+    mss_spi_instance_t *this_spi)
 {
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
 
     /* Re enable interrupts */
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_disable()
- * See "mss_spi.h" for details of how to use this function.
- */
-void MSS_SPI_disable
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_disable()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+void MSS_SPI_disable(
+    mss_spi_instance_t *this_spi)
 {
     /* Shut down interrupts from the MSS SPI while we do this */
-    PLIC_DisableIRQ(this_spi->irqn);
+    PLIC_DisableIRQ_static(this_spi->irqn);
 
     this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
 
     /* Re-enable interrupts */
-    PLIC_EnableIRQ(this_spi->irqn);
+    PLIC_EnableIRQ_static(this_spi->irqn);
 }
 
-/***************************************************************************//**
- * MSS_SPI_tx_done()
- * See "mss_spi.h" for details of how to use this function.
- */
-uint32_t MSS_SPI_tx_done
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               * MSS_SPI_tx_done()
+                                                                               * See "mss_spi.h" for details of how to use this function.
+                                                                               */
+uint32_t MSS_SPI_tx_done(
+    mss_spi_instance_t *this_spi)
 {
     uint32_t tx_done;
 
@@ -1025,43 +968,41 @@ uint32_t MSS_SPI_tx_done
     return tx_done;
 }
 
-/***************************************************************************//**
- * Fill the transmit FIFO(used for slave block transfers).
- */
-static void fill_slave_tx_fifo
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               * Fill the transmit FIFO(used for slave block transfers).
+                                                                               */
+static void fill_slave_tx_fifo(
+    mss_spi_instance_t *this_spi)
 {
     uint32_t guard = 0u;
 
     while ((0u == (this_spi->hw_reg->STATUS & TX_FIFO_FULL_MASK)) &&
-          (this_spi->slave_tx_idx < this_spi->slave_tx_size))
+           (this_spi->slave_tx_idx < this_spi->slave_tx_size))
     {
         /* Sending from primary slave transmit buffer */
         this_spi->hw_reg->TX_DATA =
-                (uint32_t)(this_spi->slave_tx_buffer[this_spi->slave_tx_idx]);
+            (uint32_t)(this_spi->slave_tx_buffer[this_spi->slave_tx_idx]);
         ++this_spi->slave_tx_idx;
     }
 
     if (this_spi->slave_tx_idx >= this_spi->slave_tx_size)
     {
         while ((0u == (this_spi->hw_reg->STATUS & TX_FIFO_FULL_MASK)) &&
-              (this_spi->resp_buff_tx_idx < this_spi->resp_buff_size))
+               (this_spi->resp_buff_tx_idx < this_spi->resp_buff_size))
         {
             /* Sending from command response buffer */
             this_spi->hw_reg->TX_DATA =
-            (uint32_t)(this_spi->resp_tx_buffer[this_spi->resp_buff_tx_idx]);
+                (uint32_t)(this_spi->resp_tx_buffer[this_spi->resp_buff_tx_idx]);
             ++this_spi->resp_buff_tx_idx;
         }
     }
 
     if ((0u != this_spi->cmd_done) &&
-       (this_spi->slave_tx_idx >= this_spi->slave_tx_size) &&
-       (this_spi->resp_buff_tx_idx >= this_spi->resp_buff_size))
+        (this_spi->slave_tx_idx >= this_spi->slave_tx_size) &&
+        (this_spi->resp_buff_tx_idx >= this_spi->resp_buff_size))
     {
         while ((0u == (this_spi->hw_reg->STATUS & TX_FIFO_FULL_MASK)) &&
-              (guard < BIG_FIFO_SIZE))
+               (guard < BIG_FIFO_SIZE))
         {
             /* Nothing left so pad with 0s for consistency */
             this_spi->hw_reg->TX_DATA = 0x00u;
@@ -1075,13 +1016,11 @@ static void fill_slave_tx_fifo
     }
 }
 
-/***************************************************************************//**
- *
- */
-static void read_slave_rx_fifo
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               *
+                                                                               */
+static void read_slave_rx_fifo(
+    mss_spi_instance_t *this_spi)
 {
     volatile uint32_t rx_frame;
 
@@ -1093,7 +1032,7 @@ static void read_slave_rx_fifo
             rx_frame = this_spi->hw_reg->RX_DATA;
             if ((mss_spi_frame_rx_handler_t)0 != this_spi->frame_rx_handler)
             {
-                this_spi->frame_rx_handler( rx_frame );
+                this_spi->frame_rx_handler(rx_frame);
             }
         }
     }
@@ -1107,7 +1046,7 @@ static void read_slave_rx_fifo
             if (this_spi->slave_rx_idx < this_spi->slave_rx_size)
             {
                 this_spi->slave_rx_buffer[this_spi->slave_rx_idx] =
-                                         (uint8_t)rx_frame;
+                    (uint8_t)rx_frame;
             }
             ++this_spi->slave_rx_idx;
         }
@@ -1122,19 +1061,16 @@ static void read_slave_rx_fifo
     }
 }
 
-/***************************************************************************//**
- * SPI interrupt service routine.
- */
-static void mss_spi_isr
-(
-    mss_spi_instance_t * this_spi
-)
+/***************************************************************************/ /**
+                                                                               * SPI interrupt service routine.
+                                                                               */
+static void mss_spi_isr(
+    mss_spi_instance_t *this_spi)
 {
     volatile uint32_t rx_frame;
-    volatile  uint32_t *this_mis = &this_spi->hw_reg->MIS;
+    volatile uint32_t *this_mis = &this_spi->hw_reg->MIS;
 
-    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi)
-            || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
+    ASSERT((this_spi == &g_mss_spi0_lo) || (this_spi == &g_mss_spi0_hi) || (this_spi == &g_mss_spi1_lo) || (this_spi == &g_mss_spi1_hi));
 
     if (0u != (*this_mis & RXDONE_IRQ_MASK))
     {
@@ -1162,7 +1098,7 @@ static void mss_spi_isr
                 if (this_spi->slave_rx_idx < this_spi->slave_rx_size)
                 {
                     this_spi->slave_rx_buffer[this_spi->slave_rx_idx] =
-                                             (uint8_t)rx_frame;
+                        (uint8_t)rx_frame;
                 }
                 ++this_spi->slave_rx_idx;
             }
@@ -1183,12 +1119,12 @@ static void mss_spi_isr
     {
         if (MSS_SPI_SLAVE_XFER_FRAME == this_spi->slave_xfer_mode)
         {
-           /* Reload slave tx frame into Tx data register. */
+            /* Reload slave tx frame into Tx data register. */
             this_spi->hw_reg->TX_DATA = this_spi->slave_tx_frame;
         }
         else /* Must be block mode so load FIFO to the max */
         {
-            fill_slave_tx_fifo (this_spi);
+            fill_slave_tx_fifo(this_spi);
         }
 
         this_spi->hw_reg->INT_CLEAR = TXDONE_IRQ_MASK;
@@ -1197,7 +1133,7 @@ static void mss_spi_isr
     /* Handle command interrupt. */
     if (0u != (*this_mis & CMD_IRQ_MASK))
     {
-        read_slave_rx_fifo (this_spi);
+        read_slave_rx_fifo(this_spi);
 
         /* Call the command handler if one exists. */
         if ((mss_spi_block_rx_handler_t)0 != this_spi->cmd_handler)
@@ -1235,12 +1171,10 @@ static void mss_spi_isr
     if (0u != (*this_mis & TXURUN_IRQ_MASK))
     {
         this_spi->hw_reg->COMMAND |= TX_FIFO_RESET_MASK;
-        if ( MSS_SPI_SLAVE_XFER_FRAME == this_spi->slave_xfer_mode )
+        if (MSS_SPI_SLAVE_XFER_FRAME == this_spi->slave_xfer_mode)
         {
             this_spi->hw_reg->FRAMESUP = 0u;
-            this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL
-                                         & ~TXRXDFCOUNT_MASK)
-                                         | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
+            this_spi->hw_reg->CONTROL = (this_spi->hw_reg->CONTROL & ~TXRXDFCOUNT_MASK) | ((uint32_t)1u << TXRXDFCOUNT_SHIFT);
 
             /* Reload slave tx frame into Tx data register. */
             this_spi->hw_reg->TX_DATA = this_spi->slave_tx_frame;
@@ -1301,28 +1235,26 @@ static void mss_spi_isr
         this_spi->hw_reg->INT_CLEAR = SSEND_IRQ_MASK;
     }
 }
-/************************************************************************//***
-  This is the local function to recover from rx overflow. This function performs
-  set of operations which includes storing the current state of MSS SPI
-  registers, reset the SPI core, restore the registers.
-  Resetting the SPI core is performed by call back function which user must
-  implement. Driver sends information about the SPI instance in use and the
-  handler function resets particular SPI core.
+/************************************************************************/ /***
+   This is the local function to recover from rx overflow. This function performs
+   set of operations which includes storing the current state of MSS SPI
+   registers, reset the SPI core, restore the registers.
+   Resetting the SPI core is performed by call back function which user must
+   implement. Driver sends information about the SPI instance in use and the
+   handler function resets particular SPI core.
 
-  Note: while configuring the SPI in master mode, user must provide the overflow
-        handler function as one of the arguments.
+   Note: while configuring the SPI in master mode, user must provide the overflow
+         handler function as one of the arguments.
 
-  @param this_spi
-    The this_spi parameter is a pointer to an mss_spi_instance_t structure
-    identifying the MSS SPI hardware block to be configured. There are two such
-    data structures, g_mss_spi0 and g_mss_spi1, associated with MSS SPI 0 and
-    MSS SPI 1 respectively. This parameter must point to either the g_mss_spi0
-    or g_mss_spi1 global data structure defined within the SPI driver.
- */
-static void recover_from_rx_overflow
-(
-    mss_spi_instance_t * this_spi
-)
+   @param this_spi
+     The this_spi parameter is a pointer to an mss_spi_instance_t structure
+     identifying the MSS SPI hardware block to be configured. There are two such
+     data structures, g_mss_spi0 and g_mss_spi1, associated with MSS SPI 0 and
+     MSS SPI 1 respectively. This parameter must point to either the g_mss_spi0
+     or g_mss_spi1 global data structure defined within the SPI driver.
+  */
+static void recover_from_rx_overflow(
+    mss_spi_instance_t *this_spi)
 {
     uint32_t control_reg;
     uint32_t clk_gen;
@@ -1395,11 +1327,11 @@ static void recover_from_rx_overflow
     this_spi->hw_reg->SLAVE_SELECT = slave_select;
 }
 
-/***************************************************************************//**
- * SPI0 interrupt service routine.
- * Please note that the name of this ISR is defined as part of the MPFS HAL
- * start-up code.
- */
+/***************************************************************************/ /**
+                                                                               * SPI0 interrupt service routine.
+                                                                               * Please note that the name of this ISR is defined as part of the MPFS HAL
+                                                                               * start-up code.
+                                                                               */
 uint8_t spi0_plic_IRQHandler(void)
 {
     if (g_spi_axi_pos & 0x01u)
@@ -1414,11 +1346,11 @@ uint8_t spi0_plic_IRQHandler(void)
     return (uint8_t)EXT_IRQ_KEEP_ENABLED;
 }
 
-/***************************************************************************//**
- * SPI1 interrupt service routine.
- * Please note that the name of this ISR is defined as part of the MPFS HAL
- * startup code.
- */
+/***************************************************************************/ /**
+                                                                               * SPI1 interrupt service routine.
+                                                                               * Please note that the name of this ISR is defined as part of the MPFS HAL
+                                                                               * startup code.
+                                                                               */
 uint8_t spi1_plic_IRQHandler(void)
 {
     if (g_spi_axi_pos & 0x02u)

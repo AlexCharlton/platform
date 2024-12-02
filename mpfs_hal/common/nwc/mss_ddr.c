@@ -562,33 +562,33 @@ static uint32_t ddr_setup(void)
                 SYSREG->SUBBLK_CLOCK_CR = 0xffffffffUL;
                 SYSREG->GPIO_INTERRUPT_FAB_CR = 0x00000000UL;
                 PLIC_init_static();
-                PLIC_SetPriority_Threshold(0);
+                PLIC_SetPriority_Threshold_static(0);
                 __enable_irq();
                 /* bit0-bit15 used to enable noise logic in steps of 5%
                   bit 16 noise logic reset
                   bit 17 clkmux sel
                   bit 18 pll powerdown
                   bit 19 external io enable for GCLKINT */
-                PLIC_SetPriority(GPIO0_BIT0_or_GPIO2_BIT0_PLIC_0, 4U);
-                PLIC_SetPriority(GPIO0_BIT1_or_GPIO2_BIT1_PLIC_1, 4U);
-                PLIC_SetPriority(GPIO0_BIT2_or_GPIO2_BIT2_PLIC_2, 4U);
-                PLIC_SetPriority(GPIO0_BIT3_or_GPIO2_BIT3_PLIC_3, 4U);
-                PLIC_SetPriority(GPIO0_BIT4_or_GPIO2_BIT4_PLIC_4, 4U);
-                PLIC_SetPriority(GPIO0_BIT5_or_GPIO2_BIT5_PLIC_5, 4U);
-                PLIC_SetPriority(GPIO0_BIT6_or_GPIO2_BIT6_PLIC_6, 4U);
-                PLIC_SetPriority(GPIO0_BIT7_or_GPIO2_BIT7_PLIC_7, 4U);
-                PLIC_SetPriority(GPIO0_BIT8_or_GPIO2_BIT8_PLIC_8, 4U);
-                PLIC_SetPriority(GPIO0_BIT9_or_GPIO2_BIT9_PLIC_9, 4U);
-                PLIC_SetPriority(GPIO0_BIT10_or_GPIO2_BIT10_PLIC_10, 4U);
-                PLIC_SetPriority(GPIO0_BIT11_or_GPIO2_BIT11_PLIC_11, 4U);
-                PLIC_SetPriority(GPIO0_BIT12_or_GPIO2_BIT12_PLIC_12, 4U);
-                PLIC_SetPriority(GPIO0_BIT13_or_GPIO2_BIT13_PLIC_13, 4U);
-                PLIC_SetPriority(GPIO1_BIT0_or_GPIO2_BIT14_PLIC_14, 4U);
-                PLIC_SetPriority(GPIO1_BIT1_or_GPIO2_BIT15_PLIC_15, 4U);
-                PLIC_SetPriority(GPIO1_BIT2_or_GPIO2_BIT16_PLIC_16, 4U);
-                PLIC_SetPriority(GPIO1_BIT3_or_GPIO2_BIT17_PLIC_17, 4U);
-                PLIC_SetPriority(GPIO1_BIT4_or_GPIO2_BIT18_PLIC_18, 4U);
-                PLIC_SetPriority(GPIO1_BIT5_or_GPIO2_BIT19_PLIC_19, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT0_or_GPIO2_BIT0_PLIC_0, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT1_or_GPIO2_BIT1_PLIC_1, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT2_or_GPIO2_BIT2_PLIC_2, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT3_or_GPIO2_BIT3_PLIC_3, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT4_or_GPIO2_BIT4_PLIC_4, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT5_or_GPIO2_BIT5_PLIC_5, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT6_or_GPIO2_BIT6_PLIC_6, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT7_or_GPIO2_BIT7_PLIC_7, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT8_or_GPIO2_BIT8_PLIC_8, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT9_or_GPIO2_BIT9_PLIC_9, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT10_or_GPIO2_BIT10_PLIC_10, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT11_or_GPIO2_BIT11_PLIC_11, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT12_or_GPIO2_BIT12_PLIC_12, 4U);
+                PLIC_SetPriority_static(GPIO0_BIT13_or_GPIO2_BIT13_PLIC_13, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT0_or_GPIO2_BIT14_PLIC_14, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT1_or_GPIO2_BIT15_PLIC_15, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT2_or_GPIO2_BIT16_PLIC_16, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT3_or_GPIO2_BIT17_PLIC_17, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT4_or_GPIO2_BIT18_PLIC_18, 4U);
+                PLIC_SetPriority_static(GPIO1_BIT5_or_GPIO2_BIT19_PLIC_19, 4U);
 
                 MSS_GPIO_init(GPIO2_LO);
                 MSS_GPIO_config_all(GPIO2_LO, MSS_GPIO_OUTPUT_MODE);

@@ -634,7 +634,8 @@ extern "C"
      * The function PLIC_EnableIRQ() enables the external interrupt for the
      * interrupt number indicated by the parameter IRQn.
      */
-    static inline void PLIC_EnableIRQ(PLIC_IRQn_Type IRQn)
+    void PLIC_EnableIRQ(PLIC_IRQn_Type IRQn);
+    static inline void PLIC_EnableIRQ_static(PLIC_IRQn_Type IRQn)
     {
         uint32_t current;
         uint64_t hart_id = read_csr(mhartid);
@@ -684,7 +685,8 @@ extern "C"
       *     for that external interrupt is executing then you must use the return
       *     value EXT_IRQ_DISABLE to return from the extern interrupt handler.
       */
-    static inline void PLIC_DisableIRQ(PLIC_IRQn_Type IRQn)
+    void PLIC_DisableIRQ(PLIC_IRQn_Type IRQn);
+    static inline void PLIC_DisableIRQ_static(PLIC_IRQn_Type IRQn)
     {
         uint32_t current;
         uint64_t hart_id = read_csr(mhartid);
@@ -726,7 +728,8 @@ extern "C"
      * The function PLIC_SetPriority() sets the priority for the external interrupt
      * for the interrupt number indicated by the parameter IRQn.
      */
-    static inline void PLIC_SetPriority(PLIC_IRQn_Type IRQn, uint32_t priority)
+    void PLIC_SetPriority(PLIC_IRQn_Type IRQn, uint32_t priority);
+    static inline void PLIC_SetPriority_static(PLIC_IRQn_Type IRQn, uint32_t priority)
     {
         if ((IRQn > PLIC_INVALID_INT_OFFSET) && (IRQn < PLIC_NUM_SOURCES))
         {
@@ -739,7 +742,8 @@ extern "C"
      * The function PLIC_GetPriority() returns the priority for the external
      * interrupt for the interrupt number indicated by the parameter IRQn.
      */
-    static inline uint32_t PLIC_GetPriority(PLIC_IRQn_Type IRQn)
+    uint32_t PLIC_GetPriority(PLIC_IRQn_Type IRQn);
+    static inline uint32_t PLIC_GetPriority_static(PLIC_IRQn_Type IRQn)
     {
         uint32_t ret_val = 0U;
 
@@ -751,7 +755,8 @@ extern "C"
         return (ret_val);
     }
 
-    static inline uint32_t PLIC_pending(PLIC_IRQn_Type IRQn)
+    uint32_t PLIC_pending(PLIC_IRQn_Type IRQn);
+    static inline uint32_t PLIC_pending_static(PLIC_IRQn_Type IRQn)
     {
         return (PLIC->PENDING_ARRAY[IRQn / 32U] & (0x01U << (IRQn % 32U)));
     }
@@ -760,7 +765,8 @@ extern "C"
     /**
      * The function PLIC_ClaimIRQ() claims the interrupt from the PLIC controller.
      */
-    static inline uint32_t PLIC_ClaimIRQ(void)
+    uint32_t PLIC_ClaimIRQ(void);
+    static inline uint32_t PLIC_ClaimIRQ_static(void)
     {
         uint64_t hart_id = read_csr(mhartid);
 
@@ -772,7 +778,8 @@ extern "C"
      * The function PLIC_CompleteIRQ() indicates to the PLIC controller the
      * interrupt is processed and claim is complete.
      */
-    static inline void PLIC_CompleteIRQ(uint32_t source)
+    void PLIC_CompleteIRQ(uint32_t source);
+    static inline void PLIC_CompleteIRQ_static(uint32_t source)
     {
         uint64_t hart_id = read_csr(mhartid);
 
@@ -794,7 +801,8 @@ extern "C"
      * interrupts with non-zero priority, whereas a value of 7 masks all
      * interrupts.
      */
-    static inline void PLIC_SetPriority_Threshold(uint32_t threshold)
+    void PLIC_SetPriority_Threshold(uint32_t threshold);
+    static inline void PLIC_SetPriority_Threshold_static(uint32_t threshold)
     {
         uint64_t hart_id = read_csr(mhartid);
 
@@ -809,7 +817,8 @@ extern "C"
      *  This is only called by the startup hart and only once
      *  Clears any pending interrupts as PLIC can be in unknown state on startup
      */
-    static inline void PLIC_ClearPendingIRQ(void)
+    void PLIC_ClearPendingIRQ(void);
+    static inline void PLIC_ClearPendingIRQ_static(void)
     {
         volatile uint32_t int_num = PLIC_ClaimIRQ();
         volatile int32_t wait_possible_int;
@@ -830,7 +839,8 @@ extern "C"
     /**
      * This function is only called from one hart on startup
      */
-    static inline void PLIC_init_on_reset(void)
+    void PLIC_init_on_reset(void);
+    static inline void PLIC_init_on_reset_static(void)
     {
         uint32_t inc;
 
