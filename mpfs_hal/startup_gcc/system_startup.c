@@ -536,12 +536,12 @@ __attribute__((weak)) void e51(void)
  * This default implementation is for illustration purpose only. If you need to
  * modify this function, create your own one in an application directory space.
  */
-__attribute__((weak)) void u54_2(void)
-{
-    parked_harts |= (1U << 2U);
-    /* Put hart in safe infinite WFI loop. */
-    park_hart();
-}
+// __attribute__((weak)) void u54_2(void)
+// {
+//     parked_harts |= (1U << 2U);
+//     /* Put hart in safe infinite WFI loop. */
+//     park_hart();
+// }
 
 /*==============================================================================
  * Third U54.
@@ -550,12 +550,12 @@ __attribute__((weak)) void u54_2(void)
  * This default implementation is for illustration purpose only. If you need to
  * modify this function, create your own one in an application directory space.
  */
-__attribute__((weak)) void u54_3(void)
-{
-    parked_harts |= (1U << 3U);
-    /* Put hart in safe infinite WFI loop. */
-    park_hart();
-}
+// __attribute__((weak)) void u54_3(void)
+// {
+//     parked_harts |= (1U << 3U);
+//     /* Put hart in safe infinite WFI loop. */
+//     park_hart();
+// }
 
 /*==============================================================================
  * Fourth U54.
@@ -564,12 +564,12 @@ __attribute__((weak)) void u54_3(void)
  * This default implementation is for illustration purpose only. If you need to
  * modify this function, create your own one in an application directory space.
  */
-__attribute__((weak)) void u54_4(void)
-{
-    parked_harts |= (1U << 4U);
-    /* Put hart in safe infinite WFI loop. */
-    park_hart();
-}
+// __attribute__((weak)) void u54_4(void)
+// {
+//     parked_harts |= (1U << 4U);
+//     /* Put hart in safe infinite WFI loop. */
+//     park_hart();
+// }
 
 /*-----------------------------------------------------------------------------
  * _start() function called invoked
