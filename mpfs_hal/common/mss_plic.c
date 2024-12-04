@@ -34,6 +34,11 @@ void PLIC_EnableIRQ(PLIC_IRQn_Type IRQn)
     PLIC_EnableIRQ_static(IRQn);
 }
 
+void PLIC_EnableIRQ_for_hart(PLIC_IRQn_Type IRQn, uint64_t hart_id)
+{
+    PLIC_EnableIRQ_for_hart_static(IRQn, hart_id);
+}
+
 void PLIC_DisableIRQ(PLIC_IRQn_Type IRQn)
 {
     PLIC_DisableIRQ_static(IRQn);

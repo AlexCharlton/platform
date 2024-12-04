@@ -634,11 +634,11 @@ extern "C"
      * The function PLIC_EnableIRQ() enables the external interrupt for the
      * interrupt number indicated by the parameter IRQn.
      */
-    void PLIC_EnableIRQ(PLIC_IRQn_Type IRQn);
-    static inline void PLIC_EnableIRQ_static(PLIC_IRQn_Type IRQn)
+    void PLIC_EnableIRQ_for_hart(PLIC_IRQn_Type IRQn, uint64_t hart_id);
+
+    static inline void PLIC_EnableIRQ_for_hart_static(PLIC_IRQn_Type IRQn, uint64_t hart_id)
     {
         uint32_t current;
-        uint64_t hart_id = read_csr(mhartid);
 
         switch (hart_id)
         {
@@ -672,19 +672,26 @@ extern "C"
         }
     }
 
-    /***************************************************************************/ /**
-      * The function PLIC_DisableIRQ() disables the external interrupt for the
-      * interrupt number indicated by the parameter IRQn.
+    void PLIC_EnableIRQ(PLIC_IRQn_Type IRQn);
 
-      * NOTE:
-      *     This function can be used to disable the external interrupt from outside
-      *     external interrupt handler function.
-      *     This function MUST NOT be used from within the External Interrupt
-      *     handler.
-      *     If you wish to disable the external interrupt while the interrupt handler
-      *     for that external interrupt is executing then you must use the return
-      *     value EXT_IRQ_DISABLE to return from the extern interrupt handler.
-      */
+    static inline void PLIC_EnableIRQ_static(PLIC_IRQn_Type IRQn)
+    {
+        PLIC_EnableIRQ_for_hart_static(IRQn, read_csr(mhartid));
+    }
+
+    /***************************************************************************/ /**
+          * The function PLIC_DisableIRQ() disables the external interrupt for the
+          * interrupt number indicated by the parameter IRQn.
+
+          * NOTE:
+          *     This function can be used to disable the external interrupt from outside
+          *     external interrupt handler function.
+          *     This function MUST NOT be used from within the External Interrupt
+          *     handler.
+          *     If you wish to disable the external interrupt while the interrupt handler
+          *     for that external interrupt is executing then you must use the return
+          *     value EXT_IRQ_DISABLE to return from the extern interrupt handler.
+          */
     void PLIC_DisableIRQ(PLIC_IRQn_Type IRQn);
     static inline void PLIC_DisableIRQ_static(PLIC_IRQn_Type IRQn)
     {

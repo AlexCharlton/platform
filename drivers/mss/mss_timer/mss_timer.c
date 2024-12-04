@@ -125,6 +125,11 @@ void MSS_TIM64_enable_irq(TIMER_TypeDef *timer)
     MSS_TIM64_enable_irq_static(timer);
 }
 
+void MSS_TIM64_enable_irq_for_hart(TIMER_TypeDef *timer, uint64_t hart_id)
+{
+    MSS_TIM64_enable_irq_for_hart_static(timer, hart_id);
+}
+
 void MSS_TIM64_disable_irq(TIMER_TypeDef *timer)
 {
     MSS_TIM64_disable_irq_static(timer);

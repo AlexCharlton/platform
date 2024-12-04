@@ -868,6 +868,15 @@ extern "C"
     PLIC_EnableIRQ_static(TIMER1_PLIC);
   }
 
+  void MSS_TIM64_enable_irq_for_hart(TIMER_TypeDef *timer, uint64_t hart_id);
+
+  static inline void
+  MSS_TIM64_enable_irq_for_hart_static(TIMER_TypeDef *timer, uint64_t hart_id)
+  {
+    timer->TIM64_CTRL |= TIM64_INTEN_MASK;
+    PLIC_EnableIRQ_for_hart_static(TIMER1_PLIC, hart_id);
+  }
+
   /*-------------------------------------------------------------------------*/
   /**
      MSS_TIM64_disable_irq() disables interrupt generation for the 64-bit timer.
