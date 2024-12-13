@@ -868,6 +868,7 @@ extern "C"
             /* Fall through to normal ST processing as we are now in slave
              * mode
              */
+            __attribute__((fallthrough));
         case ST_GCA:        /* General call address received, ACK returned */
         case ST_SLAVE_SLAW: /* SLA+W received, ACK returned */
 
