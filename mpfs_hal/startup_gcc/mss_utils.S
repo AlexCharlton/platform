@@ -11,7 +11,7 @@
 
   .section .text.init,"ax", %progbits
   .align 3
-  
+
 #include "../common/encoding.h"
 
 /***********************************************************************************
@@ -147,6 +147,7 @@ config_16_copy:
     //  a0 = dest
     //  a1 = src
     //  a2 = length
+    /*
     .globl  config_32_copy
     .type   config_32_copy, @function
 config_32_copy:
@@ -161,7 +162,7 @@ config_32_copy:
     bnez    a2,1b
 2:
     ret
-
+*/
  /******************************************************************************
  *
  * config_64_copy - copying using 64 bit loads, addresses must be on 64 bit

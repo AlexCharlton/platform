@@ -19,6 +19,21 @@ static uint8_t io_mux_and_bank_config_alt(void);
 #endif
 #endif
 
+/* There is an ASM implementation of this function, but for some reason, when it is *linked* it causes the application to fail to initialize. I didn't look too deep into this, since redefining it here seems to work fine. */
+void config_32_copy(volatile uint32_t *dest, const uint32_t *src, size_t length)
+{
+    volatile uint32_t *current_dest = dest;
+    const uint32_t *current_src = src;
+
+    while (length > 0)
+    {
+        *current_dest = *current_src;
+        current_dest++;
+        current_src++;
+        length -= 4; // Decrement by 4 bytes (32 bits)
+    }
+}
+
 /*******************************************************************************
  * external functions
  */
