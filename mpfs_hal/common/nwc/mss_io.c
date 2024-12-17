@@ -181,35 +181,37 @@ MSSIO_BANK2_CONFIG mssio_alt_bank2_io_config = {
  */
 static uint8_t io_mux_and_bank_config(void);
 
-/***************************************************************************/ /**
-                                                                               *    MSSIO OFF Mode
-                                                                               *
-                                                                               *    The following settings are applied if MMSIO unused/off
-                                                                               *
-                                                                               *      The IO Buffers are disabled.
-                                                                               *      Output drivers are disabled (set the drv<3:0> bits to 0000, output
-                                                                               *      enable "mss_oe" bit to 0)
-                                                                               *      Disable the WPU bit set to 0 and enable the WPD bit set to 1.
-                                                                               *      Receivers are disabled. (Ibufmd<2:0> set to 7)
-                                                                               *
-                                                                               *      MSS can enable OFF mode through configurator bit for selective MSSIO
-                                                                               *      from Bank2/Bank4 by making drv<3:0>/mss_oe bit to "0" for that
-                                                                               *      particular MSSIO making Output driver disabled and ibufmd <2:0>  bit to
-                                                                               *      "7" for that particular MSSIO making input receiver disabled.
-                                                                               *
-                                                                               */
+/***************************************************************************/
+/**
+ *    MSSIO OFF Mode
+ *
+ *    The following settings are applied if MMSIO unused/off
+ *
+ *      The IO Buffers are disabled.
+ *      Output drivers are disabled (set the drv<3:0> bits to 0000, output
+ *      enable "mss_oe" bit to 0)
+ *      Disable the WPU bit set to 0 and enable the WPD bit set to 1.
+ *      Receivers are disabled. (Ibufmd<2:0> set to 7)
+ *
+ *      MSS can enable OFF mode through configurator bit for selective MSSIO
+ *      from Bank2/Bank4 by making drv<3:0>/mss_oe bit to "0" for that
+ *      particular MSSIO making Output driver disabled and ibufmd <2:0>  bit to
+ *      "7" for that particular MSSIO making input receiver disabled.
+ *
+ */
 
-/***************************************************************************/ /**
-                                                                               * mssio_setup()
-                                                                               *
-                                                                               * Setup the IOMUX and IO bank 2 and 4.
-                                                                               *
-                                                                               * To setup bank 2 and 4, ncode and pcode scb registers in system
-                                                                               * register block are set as per Libero supplied values.
-                                                                               * These need to be transferred to I/0
-                                                                               *
-                                                                               * @return 0 => pass
-                                                                               */
+/***************************************************************************/
+/**
+ * mssio_setup()
+ *
+ * Setup the IOMUX and IO bank 2 and 4.
+ *
+ * To setup bank 2 and 4, ncode and pcode scb registers in system
+ * register block are set as per Libero supplied values.
+ * These need to be transferred to I/0
+ *
+ * @return 0 => pass
+ */
 uint8_t mssio_setup(void)
 {
     uint8_t ret_status = 0U;
@@ -218,11 +220,12 @@ uint8_t mssio_setup(void)
     return (ret_status);
 }
 
-/***************************************************************************/ /**
-                                                                               * io_mux_and_bank_config(void)
-                                                                               * sets up the IOMUX and bank 2 and 4 pcodes and n codes
-                                                                               * @return 0 => OK
-                                                                               */
+/***************************************************************************/
+/**
+ * io_mux_and_bank_config(void)
+ * sets up the IOMUX and bank 2 and 4 pcodes and n codes
+ * @return 0 => OK
+ */
 static uint8_t io_mux_and_bank_config(void)
 {
     /* Configure IO mux's
@@ -239,7 +242,7 @@ static uint8_t io_mux_and_bank_config(void)
      *
      * */
     config_32_copy((void *)(&(SYSREG->IOMUX0_CR)),
-                   &(iomux_config_values),
+                   (const uint32_t *)&(iomux_config_values),
                    sizeof(IOMUX_CONFIG));
 
     /*
@@ -271,11 +274,11 @@ static uint8_t io_mux_and_bank_config(void)
      * */
 
     config_32_copy((void *)(&(SYSREG->MSSIO_BANK4_IO_CFG_0_1_CR)),
-                   &(mssio_bank4_io_config),
+                   (const uint32_t *)&(mssio_bank4_io_config),
                    sizeof(MSSIO_BANK4_CONFIG));
 
     config_32_copy((void *)(&(SYSREG->MSSIO_BANK2_IO_CFG_0_1_CR)),
-                   &(mssio_bank2_io_config),
+                   (const uint32_t *)&(mssio_bank2_io_config),
                    sizeof(MSSIO_BANK2_CONFIG));
 
     set_bank2_and_bank4_volts(DEFAULT_MSSIO_CONFIGURATION);
@@ -283,11 +286,12 @@ static uint8_t io_mux_and_bank_config(void)
     return (0L);
 }
 
-/***************************************************************************/ /**
-                                                                               * io_mux_and_bank_config_alt(void)
-                                                                               * Configures alt setting
-                                                                               * @return
-                                                                               */
+/***************************************************************************/
+/**
+ * io_mux_and_bank_config_alt(void)
+ * Configures alt setting
+ * @return
+ */
 #ifdef LIBERO_SETTING_ALT_IOMUX1_CR
 #if ((LIBERO_SETTING_MSSIO_CONFIGURATION_OPTIONS & (EMMC_CONFIGURED_MASK | SD_CONFIGURED_MASK)) == (EMMC_CONFIGURED_MASK | SD_CONFIGURED_MASK))
 static uint8_t io_mux_and_bank_config_alt(void)
@@ -307,7 +311,7 @@ static uint8_t io_mux_and_bank_config_alt(void)
      * */
 
     config_32_copy((void *)(&(SYSREG->IOMUX0_CR)),
-                   &(iomux_alt_config_values),
+                   (const uint32_t *)&(iomux_alt_config_values),
                    sizeof(IOMUX_CONFIG));
 
     /*
@@ -339,11 +343,11 @@ static uint8_t io_mux_and_bank_config_alt(void)
      * */
 
     config_32_copy((void *)(&(SYSREG->MSSIO_BANK4_IO_CFG_0_1_CR)),
-                   &(mssio_alt_bank4_io_config),
+                   (const uint32_t *)&(mssio_alt_bank4_io_config),
                    sizeof(MSSIO_BANK4_CONFIG));
 
     config_32_copy((void *)(&(SYSREG->MSSIO_BANK2_IO_CFG_0_1_CR)),
-                   &(mssio_alt_bank2_io_config),
+                   (const uint32_t *)&(mssio_alt_bank2_io_config),
                    sizeof(MSSIO_BANK2_CONFIG));
 
     set_bank2_and_bank4_volts(DEFAULT_MSSIO_CONFIGURATION);
