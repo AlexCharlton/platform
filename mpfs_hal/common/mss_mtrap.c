@@ -107,7 +107,6 @@ extern "C"
             PLIC_gpio0_bit10_or_gpio2_bit13_IRQHandler,
             PLIC_gpio0_bit11_or_gpio2_bit13_IRQHandler,
             PLIC_gpio0_bit12_or_gpio2_bit13_IRQHandler,
-
             PLIC_gpio0_bit13_or_gpio2_bit13_IRQHandler,
             PLIC_gpio1_bit0_or_gpio2_bit14_IRQHandler,
             PLIC_gpio1_bit1_or_gpio2_bit15_IRQHandler,
@@ -123,23 +122,19 @@ extern "C"
             PLIC_gpio1_bit11_or_gpio2_bit25_IRQHandler,
             PLIC_gpio1_bit12_or_gpio2_bit26_IRQHandler,
             PLIC_gpio1_bit13_or_gpio2_bit27_IRQHandler,
-
             PLIC_gpio1_bit14_or_gpio2_bit28_IRQHandler,
             PLIC_gpio1_bit15_or_gpio2_bit29_IRQHandler,
             PLIC_gpio1_bit16_or_gpio2_bit30_IRQHandler,
             PLIC_gpio1_bit17_or_gpio2_bit31_IRQHandler,
-
             PLIC_gpio1_bit18_IRQHandler,
             PLIC_gpio1_bit19_IRQHandler,
             PLIC_gpio1_bit20_IRQHandler,
             PLIC_gpio1_bit21_IRQHandler,
             PLIC_gpio1_bit22_IRQHandler,
             PLIC_gpio1_bit23_IRQHandler,
-
             PLIC_gpio0_non_direct_IRQHandler,
             PLIC_gpio1_non_direct_IRQHandler,
             PLIC_gpio2_non_direct_IRQHandler,
-
             PLIC_spi0_IRQHandler,
             PLIC_spi1_IRQHandler,
             PLIC_external_can0_IRQHandler,
@@ -181,13 +176,11 @@ extern "C"
             PLIC_mmuart2_IRQHandler,
             PLIC_mmuart3_IRQHandler,
             PLIC_mmuart4_IRQHandler,
-
             PLIC_devrst_IRQHandler,
             PLIC_g5c_message_IRQHandler,
             PLIC_usoc_vc_interrupt_IRQHandler,
             PLIC_usoc_smb_interrupt_IRQHandler,
             PLIC_E51_Maintence_IRQHandler,
-
             PLIC_wdog0_mvrp_IRQHandler,
             PLIC_wdog1_mvrp_IRQHandler, /*100 contains multiple interrupts- */
             PLIC_wdog2_mvrp_IRQHandler,
@@ -198,7 +191,6 @@ extern "C"
             PLIC_wdog2_tout_IRQHandler,
             PLIC_wdog3_tout_IRQHandler,
             PLIC_wdog4_tout_IRQHandler,
-
             PLIC_g5c_mss_spi_IRQHandler,
             PLIC_volt_temp_alarm_IRQHandler,
             PLIC_athena_complete_IRQHandler,
@@ -206,9 +198,7 @@ extern "C"
             PLIC_athena_bus_error_IRQHandler,
             PLIC_usoc_axic_us_IRQHandler,
             PLIC_usoc_axic_ds_IRQHandler,
-
             PLIC_reserved_104_IRQHandler,
-
             PLIC_f2m_0_IRQHandler,
             PLIC_f2m_1_IRQHandler,
             PLIC_f2m_2_IRQHandler,
@@ -217,56 +207,50 @@ extern "C"
             PLIC_f2m_5_IRQHandler,
             PLIC_f2m_6_IRQHandler,
             PLIC_f2m_7_IRQHandler,
-            PLIC_f2m_8_IRQHandler,
-            PLIC_f2m_9_IRQHandler,
-
-            PLIC_f2m_10_IRQHandler,
-            PLIC_f2m_11_IRQHandler,
-            PLIC_f2m_12_IRQHandler,
-            PLIC_f2m_13_IRQHandler,
-            PLIC_f2m_14_IRQHandler,
-            PLIC_f2m_15_IRQHandler,
-            PLIC_f2m_16_IRQHandler,
-            PLIC_f2m_17_IRQHandler,
-            PLIC_f2m_18_IRQHandler,
-            PLIC_f2m_19_IRQHandler,
-
-            PLIC_f2m_20_IRQHandler,
-            PLIC_f2m_21_IRQHandler,
-            PLIC_f2m_22_IRQHandler,
-            PLIC_f2m_23_IRQHandler,
-            PLIC_f2m_24_IRQHandler,
-            PLIC_f2m_25_IRQHandler,
-            PLIC_f2m_26_IRQHandler,
-            PLIC_f2m_27_IRQHandler,
-            PLIC_f2m_28_IRQHandler,
-            PLIC_f2m_29_IRQHandler,
-
-            PLIC_f2m_30_IRQHandler,
-            PLIC_f2m_31_IRQHandler,
-
-            PLIC_f2m_32_IRQHandler,
-            PLIC_f2m_33_IRQHandler,
-            PLIC_f2m_34_IRQHandler,
-            PLIC_f2m_35_IRQHandler,
-            PLIC_f2m_36_IRQHandler,
-            PLIC_f2m_37_IRQHandler,
-            PLIC_f2m_38_IRQHandler,
-            PLIC_f2m_39_IRQHandler,
-            PLIC_f2m_40_IRQHandler,
-            PLIC_f2m_41_IRQHandler,
-
-            PLIC_f2m_42_IRQHandler,
-            PLIC_f2m_43_IRQHandler,
-            PLIC_f2m_44_IRQHandler,
-            PLIC_f2m_45_IRQHandler,
+            PLIC_f2m_8_IRQHandler,  // 126
+            PLIC_f2m_9_IRQHandler,  // 127
+            PLIC_f2m_10_IRQHandler, // 128
+            PLIC_f2m_11_IRQHandler, // 129
+            PLIC_f2m_12_IRQHandler, // 130
+            PLIC_f2m_13_IRQHandler, // 131
+            PLIC_f2m_14_IRQHandler, // 132
+            PLIC_f2m_15_IRQHandler, // 133
+            PLIC_f2m_16_IRQHandler, // 134
+            PLIC_f2m_17_IRQHandler, // 135
+            PLIC_f2m_18_IRQHandler, // 136
+            PLIC_f2m_19_IRQHandler, // 137
+            PLIC_f2m_20_IRQHandler, // 138
+            PLIC_f2m_21_IRQHandler, // 139
+            PLIC_f2m_22_IRQHandler, // 140
+            PLIC_f2m_23_IRQHandler, // 141
+            PLIC_f2m_24_IRQHandler, // 142
+            PLIC_f2m_25_IRQHandler, // 143
+            PLIC_f2m_26_IRQHandler, // 144
+            PLIC_f2m_27_IRQHandler, // 145
+            PLIC_f2m_28_IRQHandler, // 146
+            PLIC_f2m_29_IRQHandler, // 147
+            PLIC_f2m_30_IRQHandler, // 148
+            PLIC_f2m_31_IRQHandler, // 149
+            PLIC_f2m_32_IRQHandler, // 150
+            PLIC_f2m_33_IRQHandler, // 151
+            PLIC_f2m_34_IRQHandler, // 152
+            PLIC_f2m_35_IRQHandler, // 153
+            PLIC_f2m_36_IRQHandler, // 154
+            PLIC_f2m_37_IRQHandler, // 155
+            PLIC_f2m_38_IRQHandler, // 156
+            PLIC_f2m_39_IRQHandler, // 157
+            PLIC_f2m_40_IRQHandler, // 158
+            PLIC_f2m_41_IRQHandler, // 159
+            PLIC_f2m_42_IRQHandler, // 160
+            PLIC_f2m_43_IRQHandler, // 161
+            PLIC_f2m_44_IRQHandler, // 162
+            PLIC_f2m_45_IRQHandler, // 163
             PLIC_f2m_46_IRQHandler,
             PLIC_f2m_47_IRQHandler,
             PLIC_f2m_48_IRQHandler,
             PLIC_f2m_49_IRQHandler,
             PLIC_f2m_50_IRQHandler,
             PLIC_f2m_51_IRQHandler,
-
             PLIC_f2m_52_IRQHandler,
             PLIC_f2m_53_IRQHandler,
             PLIC_f2m_54_IRQHandler,
@@ -277,10 +261,8 @@ extern "C"
             PLIC_f2m_59_IRQHandler,
             PLIC_f2m_60_IRQHandler,
             PLIC_f2m_61_IRQHandler,
-
             PLIC_f2m_62_IRQHandler,
             PLIC_f2m_63_IRQHandler,
-
             PLIC_E51_bus_error_unit_IRQHandler,
             PLIC_U54_1_bus_error_unit_IRQHandler,
             PLIC_U54_2_bus_error_unit_IRQHandler,
