@@ -156,7 +156,7 @@ extern "C"
     static void rxpkt_handler(mss_mac_instance_t *this_mac, uint64_t queue_no);
     static void txpkt_handler(mss_mac_instance_t *this_mac, uint64_t queue_no);
     static void update_mac_cfg(const mss_mac_instance_t *this_mac);
-    static uint8_t probe_phy(const mss_mac_instance_t *this_mac);
+    // static uint8_t probe_phy(const mss_mac_instance_t *this_mac);
     static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg);
 
     static void msgmii_init(const mss_mac_instance_t *this_mac);
@@ -5386,32 +5386,32 @@ void U54_4_mac1_int_local_IRQHandler(void)
      * This function returns the detected PHY's address or 32 (PHY_ADDRESS_MAX + 1)
      * if no PHY is responding.
      */
-    static uint8_t
-    probe_phy(const mss_mac_instance_t *this_mac)
-    {
-        uint8_t phy_address = PHY_ADDRESS_MIN;
-        const uint16_t ALL_BITS_HIGH = 0xFFFFU;
-        const uint8_t PHYREG_PHYID1R = 0x02U; /* PHY Identifier 1 register address. */
-        uint32_t found;
+    // static uint8_t
+    // probe_phy(const mss_mac_instance_t *this_mac)
+    // {
+    //     uint8_t phy_address = PHY_ADDRESS_MIN;
+    //     const uint16_t ALL_BITS_HIGH = 0xFFFFU;
+    //     const uint8_t PHYREG_PHYID1R = 0x02U; /* PHY Identifier 1 register address. */
+    //     uint32_t found;
 
-        do
-        {
-            uint16_t reg;
+    //     do
+    //     {
+    //         uint16_t reg;
 
-            reg = MSS_MAC_read_phy_reg(this_mac, phy_address, PHYREG_PHYID1R);
-            if (reg != ALL_BITS_HIGH)
-            {
-                found = 1U;
-            }
-            else
-            {
-                found = 0U;
-                ++phy_address;
-            }
-        } while ((phy_address <= PHY_ADDRESS_MAX) && (0U == found));
+    //         reg = MSS_MAC_read_phy_reg(this_mac, phy_address, PHYREG_PHYID1R);
+    //         if (reg != ALL_BITS_HIGH)
+    //         {
+    //             found = 1U;
+    //         }
+    //         else
+    //         {
+    //             found = 0U;
+    //             ++phy_address;
+    //         }
+    //     } while ((phy_address <= PHY_ADDRESS_MAX) && (0U == found));
 
-        return phy_address;
-    }
+    //     return phy_address;
+    // }
 
     /*******************************************************************************
      * MSS MAC TBI interface

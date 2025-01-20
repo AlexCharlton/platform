@@ -180,7 +180,12 @@
  * This macro is a bit map that indicates which PHY sub drivers are included in
  * this build.
  */
+#if defined(TARGET_BEAGLEV_FIRE)
+#define MSS_MAC_PHYS (MSS_MAC_DEV_PHY_NULL | MSS_MAC_DEV_PHY_RTL8211)
+// TODO: Other boards
+#else
 #define MSS_MAC_PHYS (MSS_MAC_DEV_PHY_NULL | MSS_MAC_DEV_PHY_VSC8575_LITE | MSS_MAC_DEV_PHY_DP83867 | MSS_MAC_DEV_PHY_VSC8662 | MSS_MAC_DEV_PHY_VSC8541 | MSS_MAC_DEV_PHY_RTL8211)
+#endif
 
 /***************************************************************************/
 /**
