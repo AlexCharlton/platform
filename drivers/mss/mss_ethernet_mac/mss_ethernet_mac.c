@@ -1710,7 +1710,7 @@ extern "C"
                 }
                 else
                 {
-                    PLIC_EnableIRQ_static_static_static(this_mac->mac_q_int[queue_no]); /* Single interrupt from GEM? */
+                    PLIC_EnableIRQ_static(this_mac->mac_q_int[queue_no]); /* Single interrupt from GEM? */
                 }
             }
         }
