@@ -207,7 +207,7 @@
  *  requires that we make sure there are valid packet descriptors in all the
  *  cached buffer slots.
  */
-#define MSS_MAC_RX_RING_SIZE (16U)
+#define MSS_MAC_RX_RING_SIZE (64U)
 
 /***************************************************************************/
 /**
