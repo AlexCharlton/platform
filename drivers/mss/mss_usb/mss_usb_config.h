@@ -20,29 +20,32 @@
 
 #include "mpfs_hal/mss_hal.h"
 
-/*-------------------------------------------------------------------------*//**
-  Definitions Internally generated for use in the Core and logical layer.
-*/
+// This is implicitly used and coming from somewhere...
+void *memset(void *s, int c, size_t n);
+
+/*-------------------------------------------------------------------------*/ /**
+   Definitions Internally generated for use in the Core and logical layer.
+ */
 #ifdef MSS_USB_OTG_DUAL_ROLE_MODE
-    #define MSS_USB_HOST_ENABLED
-    #define MSS_USB_DEVICE_ENABLED
-    #define MSS_USB_OTG_SRP_ENABLED
-    #define MSS_USB_OTG_HNP_ENABLED
+#define MSS_USB_HOST_ENABLED
+#define MSS_USB_DEVICE_ENABLED
+#define MSS_USB_OTG_SRP_ENABLED
+#define MSS_USB_OTG_HNP_ENABLED
 #endif
 
 #ifdef MSS_USB_OTG_PERIPHERAL_MODE
-    #define MSS_USB_DEVICE_ENABLED
-    #define MSS_USB_OTG_SRP_ENABLED
+#define MSS_USB_DEVICE_ENABLED
+#define MSS_USB_OTG_SRP_ENABLED
 #endif
 
 #ifdef MSS_USB_PERIPHERAL_MODE
-    #define MSS_USB_DEVICE_ENABLED
-    #define MSS_USB_DEVICE_PRINTER
+#define MSS_USB_DEVICE_ENABLED
+#define MSS_USB_DEVICE_PRINTER
 #endif
 
 #ifdef MSS_USB_OTG_HOST_MODE
-    #define MSS_USB_HOST_ENABLED
-    #define MSS_USB_OTG_SRP_ENABLED
+#define MSS_USB_HOST_ENABLED
+#define MSS_USB_OTG_SRP_ENABLED
 #endif
 
-#endif  /* __MSS_USB_CONFIG_H_ */
+#endif /* __MSS_USB_CONFIG_H_ */
