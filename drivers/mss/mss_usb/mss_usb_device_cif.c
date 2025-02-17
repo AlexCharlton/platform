@@ -66,9 +66,12 @@ extern "C"
         {
             MSS_USB_CIF_disable_hs_mode();
         }
-
-        /*This was added during Compliance testing. Refer MUSB section 3.8.5*/
-        USB->C_T_HSBT = 0x01u;
+        else
+        {
+            /*This was added during Compliance testing. Refer MUSB section 3.8.5*/
+            // Setting this will cause the device to enter HS mode
+            USB->C_T_HSBT = 0x01u;
+        }
     }
 
     /***************************************************************************/ /**
