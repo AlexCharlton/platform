@@ -216,12 +216,8 @@ extern "C"
     /*-------------------------------------------------------------------------*/ /**
        CSR0L register related APIs
       */
-    static __INLINE uint8_t
-    MSS_USB_CIF_cep_is_rxpktrdy(
-        void)
-    {
-        return (((USB->INDEXED_CSR.DEVICE_EP0.CSR0 & CSR0L_DEV_RX_PKT_RDY_MASK) ? MSS_USB_BOOLEAN_TRUE : MSS_USB_BOOLEAN_FALSE));
-    }
+    uint8_t MSS_USB_CIF_cep_is_rxpktrdy(
+        void);
 
     static __INLINE void
     MSS_USB_CIF_cep_set_txpktrdy(

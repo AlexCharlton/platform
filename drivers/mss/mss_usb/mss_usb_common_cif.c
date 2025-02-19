@@ -53,7 +53,8 @@ extern "C"
 #endif /* MSS_USB_HOST_ENABLED */
 
     /***************************************************************************/
-    /** Reset */
+    /** "Common Register" APIs */
+
     void MSS_USB_CIF_soft_reset(void)
     {
         volatile uint8_t soft_reset;
@@ -63,6 +64,13 @@ extern "C"
         {
             soft_reset = USB->SOFT_RST;
         } while (soft_reset != 0x00u);
+    }
+
+    uint8_t
+    MSS_USB_CIF_cep_is_rxpktrdy(
+        void)
+    {
+        return (((USB->INDEXED_CSR.DEVICE_EP0.CSR0 & CSR0L_DEV_RX_PKT_RDY_MASK) ? MSS_USB_BOOLEAN_TRUE : MSS_USB_BOOLEAN_FALSE));
     }
 
     /***************************************************************************/ /**
