@@ -73,6 +73,31 @@ extern "C"
         return (((USB->INDEXED_CSR.DEVICE_EP0.CSR0 & CSR0L_DEV_RX_PKT_RDY_MASK) ? MSS_USB_BOOLEAN_TRUE : MSS_USB_BOOLEAN_FALSE));
     }
 
+    void
+    MSS_USB_CIF_read_rx_fifo(
+        mss_usb_ep_num_t ep_num,
+        void *out_data,
+        uint32_t length)
+    {
+        uint32_t idx;
+        volatile uint32_t *temp;
+        uint8_t *temp_8bit;
+
+        uint16_t words = length / 4;
+        temp = out_data;
+        temp_8bit = out_data;
+
+        for (idx = 0u; idx < words; ++idx)
+        {
+            temp[idx] = USB->FIFO[ep_num].WORD.VALUE;
+        }
+
+        for (idx = (length - (length % 4u)); idx < length; ++idx)
+        {
+            temp_8bit[idx] = USB->FIFO[ep_num].BYTE.VALUE;
+        }
+    }
+
     /***************************************************************************/ /**
                                                                                    * Private functions declarations of USB-CIF.
                                                                                    ******************************************************************************/
