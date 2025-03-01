@@ -98,6 +98,17 @@ extern "C"
         }
     }
 
+    void
+    MSS_USB_CIF_rx_ep_clr_autoclr(
+        mss_usb_ep_num_t ep_num)
+    {
+        uint16_t reg_val = USB->ENDPOINT[ep_num].RX_CSR;
+
+        reg_val &= ~RxCSRL_REG_EPN_ENABLE_AUTOCLR_MASK;
+        reg_val |= RxCSRL_REG_EPN_RX_PKT_RDY_MASK;
+        USB->ENDPOINT[ep_num].RX_CSR = reg_val;
+    }
+
     /***************************************************************************/ /**
                                                                                    * Private functions declarations of USB-CIF.
                                                                                    ******************************************************************************/

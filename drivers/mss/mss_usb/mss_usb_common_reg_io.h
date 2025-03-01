@@ -721,16 +721,9 @@ extern "C"
                                          RxCSRL_REG_EPN_RX_PKT_RDY_MASK);
     }
 
-    static __INLINE void
+    void
     MSS_USB_CIF_rx_ep_clr_autoclr(
-        mss_usb_ep_num_t ep_num)
-    {
-        uint16_t reg_val = USB->ENDPOINT[ep_num].RX_CSR;
-
-        reg_val &= ~RxCSRL_REG_EPN_ENABLE_AUTOCLR_MASK;
-        reg_val |= RxCSRL_REG_EPN_RX_PKT_RDY_MASK;
-        USB->ENDPOINT[ep_num].RX_CSR = reg_val;
-    }
+        mss_usb_ep_num_t ep_num);
 
     static __INLINE uint8_t
     MSS_USB_CIF_rx_ep_is_autoclr(
