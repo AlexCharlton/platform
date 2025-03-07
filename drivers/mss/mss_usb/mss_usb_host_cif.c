@@ -398,6 +398,65 @@ extern "C"
         g_mss_usbh_cb.usbh_connect(speed, MSS_USB_CIF_get_vbus_level());
     }
 
+    void MSS_USBH_CIF_load_tx_fifo(mss_usb_ep_num_t ep_num,
+                                   void *in_data,
+                                   uint32_t length)
+    {
+        uint32_t idx;
+        uint32_t *temp;
+        uint8_t *temp_8bit;
+
+        uint16_t words = length / 4;
+        temp = in_data;
+        temp_8bit = in_data;
+
+        for (idx = 0u; idx < words; ++idx)
+        {
+            USB->FIFO[ep_num].WORD.VALUE = (uint32_t)temp[idx];
+        }
+
+        for (idx = (length - (length % 4)); idx < length; ++idx)
+        {
+            USB->FIFO[ep_num].BYTE.VALUE = (uint8_t)temp_8bit[idx];
+        }
+    }
+
+    void MSS_USBH_CIF_read_rx_fifo(mss_usb_ep_num_t ep_num,
+                                   void *out_data,
+                                   uint32_t length)
+    {
+        uint32_t idx;
+        uint32_t *temp;
+        uint8_t *temp_8bit;
+
+        uint16_t words = length / 4;
+        temp = out_data;
+        temp_8bit = out_data;
+
+        for (idx = 0u; idx < words; ++idx)
+        {
+            temp[idx] = USB->FIFO[ep_num].WORD.VALUE;
+        }
+
+        for (idx = (length - (length % 4u)); idx < length; ++idx)
+        {
+            temp_8bit[idx] = USB->FIFO[ep_num].BYTE.VALUE;
+        }
+    }
+
+    void MSS_USBH_CIF_cep_clr_statusRxpktrdy(void)
+    {
+        if (CSR0L_HOST_RX_PKT_RDY_MASK | USB->ENDPOINT[MSS_USB_CEP].TX_CSR)
+        {
+            USB->ENDPOINT[MSS_USB_CEP].TX_CSR &= ~(CSR0L_HOST_STATUS_PKT_MASK |
+                                                   CSR0L_HOST_RX_PKT_RDY_MASK);
+        }
+        else
+        {
+            USB->ENDPOINT[MSS_USB_CEP].TX_CSR &= ~(CSR0L_HOST_STATUS_PKT_MASK);
+        }
+    }
+
 #endif /* MSS_USB_HOST_ENABLED */
 
 #ifdef __cplusplus
