@@ -40,7 +40,7 @@ extern "C"
     MSS_USBH_CIF_init(
         void)
     {
-        MSS_USB_CIF_enable_hs_mode();
+        // MSS_USB_CIF_enable_hs_mode();
         MSS_USB_CIF_clr_usb_irq_reg();
 
         PLIC_EnableIRQ_static(USB_DMA_PLIC);
