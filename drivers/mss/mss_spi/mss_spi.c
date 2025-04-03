@@ -343,10 +343,14 @@ extern "C"
         this_spi->hw_reg->CONTROL &= ~(uint32_t)CTRL_ENABLE_MASK;
         this_spi->hw_reg->CONTROL = this_spi->slaves_cfg[slave].ctrl_reg;
         this_spi->hw_reg->CLK_GEN = (uint32_t)(this_spi->slaves_cfg[slave].clk_gen);
-        this_spi->hw_reg->FRAMESIZE =
-            (uint32_t)(this_spi->slaves_cfg[slave].txrxdf_size_reg);
 
-        this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
+        // Disable frame size setting: We're going to handle this ourselves
+        /*
+          this_spi->hw_reg->FRAMESIZE =
+             (uint32_t)(this_spi->slaves_cfg[slave].txrxdf_size_reg);
+
+          this_spi->hw_reg->CONTROL |= CTRL_ENABLE_MASK;
+        */
 
         /* Set slave select */
         this_spi->hw_reg->SLAVE_SELECT |= ((uint32_t)1 << (uint32_t)slave);
