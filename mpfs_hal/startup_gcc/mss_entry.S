@@ -205,7 +205,8 @@ _start:
 .main_hart:
     # pass HLS address
     mv  a0, tp
-    j main_first_hart
+    la  t0, main_first_hart
+    jalr t0
 .LoopForeverMain:
     #in case of return, loop forever. nop's added so can be seen in debugger
     nop
@@ -256,7 +257,8 @@ _start:
     sw a1, 0(tp)
     # pass HLS address
     mv  a0, tp
-    j main_other_hart
+    la  t0, main_other_hart
+    jalr t0
 .LoopForeverOther:
     #in case of return, loop forever. nop's added so can be seen in debugger
     nop
@@ -361,7 +363,8 @@ _start_non_bootloader_amp_image:
 .main_hart:
     # pass HLS address
     mv  a0, tp
-    j main_first_hart_app
+    la  t0, main_first_hart_app
+    jalr t0
 .LoopForeverMain:
     #in case of return, loop forever. nop's added so can be seen in debugger
     nop
@@ -439,7 +442,8 @@ _start_non_bootloader_amp_image:
     sw a1, 0(tp)
     # pass HLS address
     mv  a0, tp
-    j main_other_hart
+    la  t0, main_other_hart
+    jalr t0
 .LoopForeverOther:
     #in case of return, loop forever. nop's added so can be seen in debugger
     nop
@@ -521,7 +525,8 @@ trap_vector:
     # See: https://github.com/riscv/riscv-gcc/issues/133
     csrr a1, mtval                 # useful for anaysis when things go wrong
     csrr a2, mepc
-    jal trap_from_machine_mode
+    la  t0, trap_from_machine_mode
+    jalr t0
 
 restore_regs:
     # Restore all of the registers.
