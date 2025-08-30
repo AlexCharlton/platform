@@ -253,7 +253,7 @@ extern "C"
                 status = this_uart->hw_reg->LSR;
                 this_uart->status |= status;
 
-                /* Check if TX FIFO is empty. */
+                /* Check if TX FIFO is ready. */
                 if (status & MSS_UART_THRE)
                 {
                     uint32_t fill_size = TX_FIFO_SIZE;
@@ -277,6 +277,15 @@ extern "C"
                 }
             } while (temp_tx_size);
         }
+
+        /* Wait until TX FIFO is empty. */
+        do
+        {
+            status = this_uart->hw_reg->LSR;
+            this_uart->status |= status;
+        } while (0u == (status & MSS_UART_TEMT));
+        /* Without this wait, the next transmission may corrupt what's being transmitted */
+        sleep_ms(5);
     }
 
     /***************************************************************************/
@@ -306,7 +315,7 @@ extern "C"
              */
             while (0u != data_byte)
             {
-                /* Wait until TX FIFO is empty. */
+                /* Wait until TX FIFO is ready. */
                 do
                 {
                     status = this_uart->hw_reg->LSR;
@@ -329,6 +338,14 @@ extern "C"
                 }
             }
         }
+        /* Wait until TX FIFO is empty. */
+        do
+        {
+            status = this_uart->hw_reg->LSR;
+            this_uart->status |= status;
+        } while (0u == (status & MSS_UART_TEMT));
+        /* Without this wait, the next transmission may corrupt what's being transmitted */
+        sleep_ms(5);
     }
 
     /***************************************************************************/
